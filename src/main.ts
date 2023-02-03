@@ -1,3 +1,6 @@
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
-console.log("Main module loaded!");
+const context = canvas.getContext("2d");
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
