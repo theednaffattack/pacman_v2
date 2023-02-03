@@ -4,4 +4,5 @@
 
 - Pacman assets [https://www.sourcecodester.com/javascript/15146/classic-pacman-game-using-javascript-free-source-code.html]
 
-- JS tutorial [https://www.youtube.com/watch?v=YBtzzVwrTeE&ab_channel=TraversyMedia]
+- JS tutorial [https://www.youtube.com/watch?v=5IMXpp3rohQ&ab_channel=ChrisCourses]
+- Alternate tutorial for ideas [https://www.youtube.com/watch?v=YBtzzVwrTeE&ab_channel=TraversyMedia]
