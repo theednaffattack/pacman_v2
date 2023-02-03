@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "Eddie Naff",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.4.0",
