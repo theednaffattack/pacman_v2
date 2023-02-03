@@ -4,7 +4,7 @@ A pretty simple pacman demo.
 
 ## Project Checklist
 
-1.  [ ] Project Setup
+1.  [x] Project Setup
 2.  [ ] Generate map boundaries
 3.  [ ] Add pacman with movement
 4.  [ ] Collison detection
