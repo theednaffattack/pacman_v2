@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="./src/css/style.css" />
   </head>
   <body>
-    <canvas></canvas>
+    <div id="outer-container">
+      <div class="info-box">
+        <p>
+          <span>Score: <span id="score">0</span></span>
+        </p>
+      </div>
+      <canvas></canvas>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
