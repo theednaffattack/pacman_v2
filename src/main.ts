@@ -1,5 +1,6 @@
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
+import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
@@ -11,6 +12,7 @@ canvas.height = innerHeight;
 
 export const canvasErrorString = "Canvas context is undefined or null!";
 
+const pellets: Pellet[] = [];
 const boundaries: Boundary[] = [];
 const player = new Player({
   position: {
@@ -54,15 +56,15 @@ const map = [
 ];
 
 // Additional cases (does not include the power up pellet that's inserted later in the vid)
-map.forEach((row, i) => {
-  row.forEach((symbol, j) => {
+map.forEach((row, rowIndex) => {
+  row.forEach((symbol, cellIndex) => {
     switch (symbol) {
       case "-":
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/pipeHorizontal.png"),
           })
@@ -72,8 +74,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/pipeVertical.png"),
           })
@@ -83,8 +85,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/pipeCorner1.png"),
           })
@@ -94,8 +96,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/pipeCorner2.png"),
           })
@@ -105,8 +107,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/pipeCorner3.png"),
           })
@@ -116,8 +118,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/pipeCorner4.png"),
           })
@@ -127,8 +129,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: Boundary.cellWidth * j,
-              y: Boundary.cellHeight * i,
+              x: Boundary.cellWidth * cellIndex,
+              y: Boundary.cellHeight * rowIndex,
             },
             image: createImage("./src/image/block.png"),
           })
@@ -138,8 +140,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             image: createImage("./src/image/capLeft.png"),
           })
@@ -149,8 +151,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             image: createImage("./src/image/capRight.png"),
           })
@@ -160,8 +162,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             image: createImage("./src/image/capBottom.png"),
           })
@@ -171,8 +173,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             image: createImage("./src/image/capTop.png"),
           })
@@ -182,8 +184,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             image: createImage("./src/image/pipeCross.png"),
           })
@@ -193,8 +195,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             color: "blue",
             image: createImage("./src/image/pipeConnectorTop.png"),
@@ -205,8 +207,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             color: "blue",
             image: createImage("./src/image/pipeConnectorRight.png"),
@@ -217,8 +219,8 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             color: "blue",
             image: createImage("./src/image/pipeConnectorBottom.png"),
@@ -229,23 +231,23 @@ map.forEach((row, i) => {
         boundaries.push(
           new Boundary({
             position: {
-              x: j * Boundary.cellWidth,
-              y: i * Boundary.cellHeight,
+              x: cellIndex * Boundary.cellWidth,
+              y: rowIndex * Boundary.cellHeight,
             },
             image: createImage("./src/image/pipeConnectorLeft.png"),
           })
         );
         break;
-      // case ".":
-      //   pellets.push(
-      //     new Pellet({
-      //       position: {
-      //         x: j * Boundary.cellWidth + Boundary.cellWidth / 2,
-      //         y: i * Boundary.cellHeight + Boundary.cellHeight / 2,
-      //       },
-      //     })
-      //   );
-      //   break;
+      case ".":
+        pellets.push(
+          new Pellet({
+            position: {
+              x: cellIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
+              y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
+            },
+          })
+        );
+        break;
     }
   });
 });
@@ -325,6 +327,10 @@ function animate() {
       }
     }
   }
+
+  pellets.forEach((pellet) => {
+    pellet.draw();
+  });
 
   boundaries.forEach((boundary) => {
     boundary.draw();

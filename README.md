@@ -9,7 +9,7 @@ A pretty simple pacman demo.
 3.  [x] Add pacman with movement
 4.  [x] Collison detection
 5.  [x] Swap boundaries with images
-6.  [ ] Generate pellets
+6.  [x] Generate pellets
 7.  [ ] Remove pellets on collsion
 8.  [ ] Add score
 9.  [ ] Create ghost
