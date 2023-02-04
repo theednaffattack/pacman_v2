@@ -5,10 +5,32 @@ import { Player } from "./player-class";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
+const scoreElement = document.getElementById("score");
+
 export const context = canvas.getContext("2d");
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+const map = [
+  ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
+  ["|", ".", ".", ".", ".", ".", ".", ".", ".", ".", "|"],
+  ["|", ".", "b", ".", "[", "7", "]", ".", "b", ".", "|"],
+  ["|", ".", ".", ".", ".", "_", ".", ".", ".", ".", "|"],
+  ["|", ".", "[", "]", ".", ".", ".", "[", "]", ".", "|"],
+  ["|", ".", ".", ".", ".", "^", ".", ".", ".", ".", "|"],
+  ["|", ".", "b", ".", "[", "+", "]", ".", "b", ".", "|"],
+  ["|", ".", ".", ".", ".", "_", ".", ".", ".", ".", "|"],
+  ["|", ".", "[", "]", ".", ".", ".", "[", "]", ".", "|"],
+  ["|", ".", ".", ".", ".", "^", ".", ".", ".", ".", "|"],
+  ["|", ".", "b", ".", "[", "5", "]", ".", "b", ".", "|"],
+  ["|", ".", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
+  ["4", "-", "-", "-", "-", "-", "-", "-", "-", "-", "3"],
+];
+
+const tileSize = 40;
+
+// set the width to the number of colums * tileSize
+canvas.width = map[0].length * tileSize;
+// Set the height to the number rows * tileSize
+canvas.height = map.length * tileSize;
 
 export const canvasErrorString = "Canvas context is undefined or null!";
 
@@ -33,27 +55,13 @@ type KeyType = "" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight";
 
 let lastKey: KeyType = "";
 
+let score = 0;
+
 function createImage(src: string) {
   const image = new Image();
   image.src = src;
   return image;
 }
-
-const map = [
-  ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
-  ["|", ".", ".", ".", ".", ".", ".", ".", ".", ".", "|"],
-  ["|", ".", "b", ".", "[", "7", "]", ".", "b", ".", "|"],
-  ["|", ".", ".", ".", ".", "_", ".", ".", ".", ".", "|"],
-  ["|", ".", "[", "]", ".", ".", ".", "[", "]", ".", "|"],
-  ["|", ".", ".", ".", ".", "^", ".", ".", ".", ".", "|"],
-  ["|", ".", "b", ".", "[", "+", "]", ".", "b", ".", "|"],
-  ["|", ".", ".", ".", ".", "_", ".", ".", ".", ".", "|"],
-  ["|", ".", "[", "]", ".", ".", ".", "[", "]", ".", "|"],
-  ["|", ".", ".", ".", ".", "^", ".", ".", ".", ".", "|"],
-  ["|", ".", "b", ".", "[", "5", "]", ".", "b", ".", "|"],
-  ["|", ".", ".", ".", ".", ".", ".", ".", ".", "p", "|"],
-  ["4", "-", "-", "-", "-", "-", "-", "-", "-", "-", "3"],
-];
 
 // Additional cases (does not include the power up pellet that's inserted later in the vid)
 map.forEach((row, rowIndex) => {
@@ -328,6 +336,7 @@ function animate() {
     }
   }
 
+  // Detect pellet collision
   for (let pelletIndex = pellets.length - 1; 0 < pelletIndex; pelletIndex--) {
     const pellet = pellets[pelletIndex];
 
@@ -341,6 +350,13 @@ function animate() {
       pellet.radius + player.radius
     ) {
       pellets.splice(pelletIndex, 1);
+      score += 10;
+      if (!scoreElement) {
+        console.error("Score element is missing!");
+        return;
+      } else {
+        scoreElement.innerHTML = score.toString();
+      }
     }
   }
   boundaries.forEach((boundary) => {
