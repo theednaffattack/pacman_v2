@@ -8,7 +8,7 @@ A pretty simple pacman demo.
 2.  [x] Generate map boundaries
 3.  [x] Add pacman with movement
 4.  [x] Collison detection
-5.  [ ] Swap boundaries with images
+5.  [x] Swap boundaries with images
 6.  [ ] Generate pellets
 7.  [ ] Remove pellets on collsion
 8.  [ ] Add score
