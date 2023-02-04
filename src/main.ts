@@ -18,6 +18,7 @@ type VelocityType = {
 type BoundaryConstructor = {
   position: PositionType;
   image: HTMLImageElement;
+  color?: string;
 };
 
 type PlayerConstructor = {
