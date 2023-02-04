@@ -328,10 +328,21 @@ function animate() {
     }
   }
 
-  pellets.forEach((pellet) => {
-    pellet.draw();
-  });
+  for (let pelletIndex = pellets.length - 1; 0 < pelletIndex; pelletIndex--) {
+    const pellet = pellets[pelletIndex];
 
+    pellet.draw();
+
+    if (
+      Math.hypot(
+        pellet.position.x - player.position.x,
+        pellet.position.y - player.position.y
+      ) <
+      pellet.radius + player.radius
+    ) {
+      pellets.splice(pelletIndex, 1);
+    }
+  }
   boundaries.forEach((boundary) => {
     boundary.draw();
 
