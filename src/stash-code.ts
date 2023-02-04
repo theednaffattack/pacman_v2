@@ -1,4 +1,4 @@
-import { Boundary } from "./main";
+import { Boundary } from "./boundary-class";
 
 export const fakeVar = "prevent TS Error";
 // BEG FAKE TROUGH
