@@ -142,7 +142,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/pipeHorizontal.png"),
+            image: createImage("./src/image/pipeHorizontal.png"),
           })
         );
         break;
@@ -153,7 +153,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/pipeVertical.png"),
+            image: createImage("./src/image/pipeVertical.png"),
           })
         );
         break;
@@ -164,7 +164,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/pipeCorner1.png"),
+            image: createImage("./src/image/pipeCorner1.png"),
           })
         );
         break;
@@ -175,7 +175,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/pipeCorner2.png"),
+            image: createImage("./src/image/pipeCorner2.png"),
           })
         );
         break;
@@ -186,7 +186,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/pipeCorner3.png"),
+            image: createImage("./src/image/pipeCorner3.png"),
           })
         );
         break;
@@ -197,7 +197,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/pipeCorner4.png"),
+            image: createImage("./src/image/pipeCorner4.png"),
           })
         );
         break;
@@ -208,7 +208,7 @@ map.forEach((row, i) => {
               x: Boundary.cellWidth * j,
               y: Boundary.cellHeight * i,
             },
-            image: createImage("./img/block.png"),
+            image: createImage("./src/image/block.png"),
           })
         );
         break;
@@ -219,7 +219,7 @@ map.forEach((row, i) => {
               x: j * Boundary.cellWidth,
               y: i * Boundary.cellHeight,
             },
-            image: createImage("./img/capLeft.png"),
+            image: createImage("./src/image/capLeft.png"),
           })
         );
         break;
@@ -230,7 +230,7 @@ map.forEach((row, i) => {
               x: j * Boundary.cellWidth,
               y: i * Boundary.cellHeight,
             },
-            image: createImage("./img/capRight.png"),
+            image: createImage("./src/image/capRight.png"),
           })
         );
         break;
@@ -241,7 +241,7 @@ map.forEach((row, i) => {
               x: j * Boundary.cellWidth,
               y: i * Boundary.cellHeight,
             },
-            image: createImage("./img/capBottom.png"),
+            image: createImage("./src/image/capBottom.png"),
           })
         );
         break;
@@ -252,7 +252,7 @@ map.forEach((row, i) => {
               x: j * Boundary.cellWidth,
               y: i * Boundary.cellHeight,
             },
-            image: createImage("./img/capTop.png"),
+            image: createImage("./src/image/capTop.png"),
           })
         );
         break;
@@ -263,7 +263,7 @@ map.forEach((row, i) => {
               x: j * Boundary.cellWidth,
               y: i * Boundary.cellHeight,
             },
-            image: createImage("./img/pipeCross.png"),
+            image: createImage("./src/image/pipeCross.png"),
           })
         );
         break;
@@ -275,7 +275,7 @@ map.forEach((row, i) => {
               y: i * Boundary.cellHeight,
             },
             color: "blue",
-            image: createImage("./img/pipeConnectorTop.png"),
+            image: createImage("./src/image/pipeConnectorTop.png"),
           })
         );
         break;
@@ -287,7 +287,7 @@ map.forEach((row, i) => {
               y: i * Boundary.cellHeight,
             },
             color: "blue",
-            image: createImage("./img/pipeConnectorRight.png"),
+            image: createImage("./src/image/pipeConnectorRight.png"),
           })
         );
         break;
@@ -299,7 +299,7 @@ map.forEach((row, i) => {
               y: i * Boundary.cellHeight,
             },
             color: "blue",
-            image: createImage("./img/pipeConnectorBottom.png"),
+            image: createImage("./src/image/pipeConnectorBottom.png"),
           })
         );
         break;
@@ -310,7 +310,7 @@ map.forEach((row, i) => {
               x: j * Boundary.cellWidth,
               y: i * Boundary.cellHeight,
             },
-            image: createImage("./img/pipeConnectorLeft.png"),
+            image: createImage("./src/image/pipeConnectorLeft.png"),
           })
         );
         break;
