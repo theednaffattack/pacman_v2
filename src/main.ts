@@ -187,6 +187,8 @@ function animate() {
         player.velocity.y = -5;
       }
     }
+  } else if (!keys.ArrowUp.pressed && lastKey === "ArrowUp") {
+    player.velocity.y = 0;
   } else if (keys.ArrowDown.pressed && lastKey === "ArrowDown") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -202,6 +204,8 @@ function animate() {
         player.velocity.y = 5;
       }
     }
+  } else if (!keys.ArrowDown.pressed && lastKey === "ArrowDown") {
+    player.velocity.y = 0;
   } else if (keys.ArrowLeft.pressed && lastKey === "ArrowLeft") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -217,6 +221,8 @@ function animate() {
         player.velocity.x = -5;
       }
     }
+  } else if (!keys.ArrowLeft.pressed && lastKey === "ArrowLeft") {
+    player.velocity.x = 0;
   } else if (keys.ArrowRight.pressed && lastKey === "ArrowRight") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -232,6 +238,8 @@ function animate() {
         player.velocity.x = 5;
       }
     }
+  } else if (!keys.ArrowRight.pressed && lastKey === "ArrowRight") {
+    player.velocity.x = 0;
   }
 
   boundaries.forEach((boundary) => {
@@ -278,6 +286,7 @@ addEventListener("keyup", ({ key }) => {
   switch (key) {
     case "ArrowUp":
       keys.ArrowUp.pressed = false;
+
       break;
 
     case "ArrowDown":
