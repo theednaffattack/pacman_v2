@@ -314,16 +314,16 @@ map.forEach((row, i) => {
           })
         );
         break;
-      case ".":
-        pellets.push(
-          new Pellet({
-            position: {
-              x: j * Boundary.cellWidth + Boundary.cellWidth / 2,
-              y: i * Boundary.cellHeight + Boundary.cellHeight / 2,
-            },
-          })
-        );
-        break;
+      // case ".":
+      //   pellets.push(
+      //     new Pellet({
+      //       position: {
+      //         x: j * Boundary.cellWidth + Boundary.cellWidth / 2,
+      //         y: i * Boundary.cellHeight + Boundary.cellHeight / 2,
+      //       },
+      //     })
+      //   );
+      //   break;
     }
   });
 });
