@@ -11,7 +11,7 @@ A pretty simple pacman demo.
 5.  [x] Swap boundaries with images
 6.  [x] Generate pellets
 7.  [x] Remove pellets on collsion
-8.  [ ] Add score
+8.  [x] Add score
 9.  [ ] Create ghost
 10. [ ] Create power-up
 11. [ ] Add win condition
