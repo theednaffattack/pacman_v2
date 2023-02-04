@@ -140,14 +140,7 @@ function animate() {
   // Only the updated player position
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  boundaries.forEach((boundary) => {
-    boundary.draw();
-  });
-
-  player.update();
-  player.velocity.y = 0;
-  player.velocity.x = 0;
-
+  // Character movement
   if (keys.ArrowUp.pressed && lastKey === "ArrowUp") {
     player.velocity.y = -5;
   } else if (keys.ArrowDown.pressed && lastKey === "ArrowDown") {
@@ -157,6 +150,35 @@ function animate() {
   } else if (keys.ArrowRight.pressed && lastKey === "ArrowRight") {
     player.velocity.x = 5;
   }
+
+  boundaries.forEach((boundary) => {
+    boundary.draw();
+
+    // collision detector
+    if (
+      // top of player
+      player.position.y - player.radius + player.velocity.y <=
+        boundary.position.y + boundary.height &&
+      // right side of player
+      player.position.x + player.radius + player.velocity.x >=
+        boundary.position.x &&
+      // bottom of player
+      player.position.y + player.radius + player.velocity.y >=
+        boundary.position.y &&
+      // left side of player
+      player.position.x - player.radius + player.velocity.x <=
+        boundary.position.x + boundary.width
+    ) {
+      //
+      console.log("we are colliding");
+      player.velocity.x = 0;
+      player.velocity.y = 0;
+    }
+  });
+
+  player.update();
+  // player.velocity.y = 0;
+  // player.velocity.x = 0;
 }
 
 animate();
