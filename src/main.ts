@@ -1,94 +1,15 @@
+import { Boundary } from "./boundary-class";
+import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
+import { Player } from "./player-class";
+
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
-const context = canvas.getContext("2d");
+export const context = canvas.getContext("2d");
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-type PositionType = {
-  x: number;
-  y: number;
-};
-
-type VelocityType = {
-  x: number;
-  y: number;
-};
-
-type BoundaryConstructor = {
-  position: PositionType;
-  image: HTMLImageElement;
-  color?: string;
-};
-
-type PlayerConstructor = {
-  position: PositionType;
-  velocity: VelocityType;
-};
-
-const canvasErrorString = "Canvas context is undefined or null!";
-
-class Boundary {
-  position;
-  width: number;
-  height: number;
-  static cellWidth = 40;
-  static cellHeight = 40;
-  image;
-  constructor({ position, image }: BoundaryConstructor) {
-    this.position = position;
-    this.width = 40;
-    this.height = 40;
-    this.image = image;
-  }
-
-  draw() {
-    // I'm using a guard here to account for the
-    // context possibly being null. Ideally
-    // I'd have a custom error or function that
-    // introduces a visual error state to the game.
-    if (!context) {
-      console.error(canvasErrorString);
-      return;
-    }
-    // context.fillStyle = "blue";
-    // context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    context.drawImage(this.image, this.position.x, this.position.y);
-  }
-}
-
-type PlayerType = {
-  position: PositionType;
-  radius: number;
-  velocity: VelocityType;
-};
-
-class Player {
-  position: PositionType;
-  radius: number;
-  velocity: VelocityType;
-  constructor({ position, velocity }: PlayerConstructor) {
-    this.position = position;
-    this.velocity = velocity;
-    this.radius = 15;
-  }
-  draw() {
-    if (!context) {
-      console.error(canvasErrorString);
-      return;
-    }
-    context.beginPath();
-    context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = "yellow";
-    context.fill();
-    context.closePath();
-  }
-  update() {
-    this.draw();
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-  }
-}
+export const canvasErrorString = "Canvas context is undefined or null!";
 
 const boundaries: Boundary[] = [];
 const player = new Player({
@@ -328,28 +249,6 @@ map.forEach((row, i) => {
     }
   });
 });
-function circleCollidesWithRectangle({
-  circle,
-  rectangle,
-}: {
-  rectangle: Boundary;
-  circle: PlayerType;
-}) {
-  return (
-    // top of circle
-    circle.position.y - circle.radius + circle.velocity.y <=
-      rectangle.position.y + rectangle.height &&
-    // right side of circle
-    circle.position.x + circle.radius + circle.velocity.x >=
-      rectangle.position.x &&
-    // bottom of circle
-    circle.position.y + circle.radius + circle.velocity.y >=
-      rectangle.position.y &&
-    // left side of circle
-    circle.position.x - circle.radius + circle.velocity.x <=
-      rectangle.position.x + rectangle.width
-  );
-}
 
 function animate() {
   requestAnimationFrame(animate);
