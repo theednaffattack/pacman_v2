@@ -22,3 +22,21 @@ canvas {
 #outer-container {
   padding-left: 10px;
 }
+#canvas-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  outline: 2px dashed red;
+  align-items: center;
+}
+#game-over-box {
+  background-color: beige;
+  color: black;
+  margin: auto;
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  /* transform: translateX(50%); */
+}
