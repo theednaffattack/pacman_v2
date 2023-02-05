@@ -12,7 +12,7 @@ A pretty simple pacman demo.
 6.  [x] Generate pellets
 7.  [x] Remove pellets on collsion
 8.  [x] Add score
-9.  [ ] Create ghost
+9.  [x] Create ghost
 10. [ ] Create power-up
 11. [ ] Add win condition
 12. [ ] Lay out a full level
