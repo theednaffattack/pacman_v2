@@ -15,7 +15,7 @@ A pretty simple pacman demo.
 9.  [x] Create ghost
 10. [x] Create power-up
 11. [x] Add win condition
-12. [ ] Lay out a full level
+12. [x] Lay out a full level
 13. [ ] Animate pacman chomp
 
 ## Advanced
