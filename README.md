@@ -16,7 +16,7 @@ A pretty simple pacman demo.
 10. [x] Create power-up
 11. [x] Add win condition
 12. [x] Lay out a full level
-13. [ ] Animate pacman chomp
+13. [x] Animate pacman chomp
 
 ## Advanced
 
