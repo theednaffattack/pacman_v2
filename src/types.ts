@@ -14,13 +14,22 @@ export type BoundaryConstructor = {
   color?: string;
 };
 
-export type PlayerConstructor = {
+export interface PlayerConstructor {
   position: PositionType;
   velocity: VelocityType;
-};
+}
+
+export interface GhostConstructor extends PlayerConstructor {
+  position: PositionType;
+  speed: number;
+  velocity: VelocityType;
+  color: string;
+}
 
 export type PlayerType = {
   position: PositionType;
   radius: number;
   velocity: VelocityType;
 };
+
+export type CollisionType = "top" | "right" | "bottom" | "left";

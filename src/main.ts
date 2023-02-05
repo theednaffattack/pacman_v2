@@ -1,7 +1,9 @@
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
+import { Ghost } from "./ghost-class";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
+import { CollisionType } from "./types";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
@@ -36,6 +38,26 @@ export const canvasErrorString = "Canvas context is undefined or null!";
 
 const pellets: Pellet[] = [];
 const boundaries: Boundary[] = [];
+const ghosts: Ghost[] = [
+  new Ghost({
+    color: "pink",
+    position: {
+      x: Boundary.cellWidth * 6 + Boundary.cellWidth / 2,
+      y: Boundary.cellHeight + Boundary.cellHeight / 2,
+    },
+    speed: 2,
+    velocity: { x: Ghost.speed, y: 0 },
+  }),
+  new Ghost({
+    color: "red",
+    position: {
+      x: Boundary.cellWidth * 6 + Boundary.cellWidth / 2,
+      y: Boundary.cellHeight * 3 + Boundary.cellHeight / 2,
+    },
+    speed: 2,
+    velocity: { x: Ghost.speed, y: 0 },
+  }),
+];
 const player = new Player({
   position: {
     x: Boundary.cellWidth + Boundary.cellWidth / 2,
@@ -260,8 +282,10 @@ map.forEach((row, rowIndex) => {
   });
 });
 
+let animationId: number;
+
 function animate() {
-  requestAnimationFrame(animate);
+  animationId = requestAnimationFrame(animate);
 
   // Use our guard clause again
   if (!context) {
@@ -370,6 +394,138 @@ function animate() {
   });
 
   player.update();
+  ghosts.forEach((ghost) => {
+    ghost.update();
+    // Lose game scenario
+    if (
+      Math.hypot(
+        ghost.position.x - player.position.x,
+        ghost.position.y - player.position.y
+      ) <
+      ghost.radius + player.radius
+    ) {
+      cancelAnimationFrame(animationId);
+    }
+    const collisions: CollisionType[] = [];
+
+    boundaries.forEach((boundary) => {
+      // Test if our ghost will collide to the top
+      if (
+        !collisions.includes("top") &&
+        circleCollidesWithRectangle({
+          circle: {
+            ...ghost,
+            velocity: {
+              x: 0,
+              y: -ghost.speed,
+            },
+          },
+          rectangle: boundary,
+        })
+      ) {
+        collisions.push("top");
+      }
+      // Test if our ghost will collide to the right
+      if (
+        !collisions.includes("right") &&
+        circleCollidesWithRectangle({
+          circle: {
+            ...ghost,
+            velocity: {
+              x: ghost.speed,
+              y: 0,
+            },
+          },
+          rectangle: boundary,
+        })
+      ) {
+        collisions.push("right");
+      }
+
+      // Test if our ghost will collide to the bottom
+      if (
+        !collisions.includes("bottom") &&
+        circleCollidesWithRectangle({
+          circle: {
+            ...ghost,
+            velocity: {
+              x: 0,
+              y: ghost.speed,
+            },
+          },
+          rectangle: boundary,
+        })
+      ) {
+        collisions.push("bottom");
+      }
+
+      // Test if our ghost will collide to the left
+      if (
+        !collisions.includes("left") &&
+        circleCollidesWithRectangle({
+          circle: {
+            ...ghost,
+            velocity: {
+              x: -ghost.speed,
+              y: 0,
+            },
+          },
+          rectangle: boundary,
+        })
+      ) {
+        collisions.push("left");
+      }
+    });
+    if (collisions.length > ghost.prevCollisions.length) {
+      ghost.prevCollisions = collisions;
+    }
+
+    if (JSON.stringify(collisions) !== JSON.stringify(ghost.prevCollisions)) {
+      if (ghost.velocity.y < 0) {
+        ghost.prevCollisions.push("top");
+      } else if (ghost.velocity.x > 0) {
+        ghost.prevCollisions.push("right");
+      } else if (ghost.velocity.y > 0) {
+        ghost.prevCollisions.push("bottom");
+      } else if (ghost.velocity.x < 0) {
+        ghost.prevCollisions.push("left");
+      }
+
+      const pathways = ghost.prevCollisions.filter((collision) => {
+        return !collisions.includes(collision);
+      });
+
+      const direction = pathways[Math.floor(Math.random() * pathways.length)];
+
+      switch (direction) {
+        case "top":
+          ghost.velocity.y = -ghost.speed;
+          ghost.velocity.x = 0;
+          break;
+
+        case "right":
+          ghost.velocity.y = 0;
+          ghost.velocity.x = ghost.speed;
+          break;
+
+        case "bottom":
+          ghost.velocity.y = ghost.speed;
+          ghost.velocity.x = 0;
+          break;
+
+        case "left":
+          ghost.velocity.y = 0;
+          ghost.velocity.x = -ghost.speed;
+          break;
+        default:
+          break;
+      }
+
+      ghost.prevCollisions = [];
+    }
+  });
+  // The commented code below allows the
+  // player to stop but it breaks turning
   // player.velocity.y = 0;
   // player.velocity.x = 0;
 }
