@@ -3,6 +3,7 @@ import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { Ghost } from "./ghost-class";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
+import { PowerUp } from "./power-up-class";
 import { CollisionType } from "./types";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
@@ -38,6 +39,7 @@ export const canvasErrorString = "Canvas context is undefined or null!";
 
 const pellets: Pellet[] = [];
 const boundaries: Boundary[] = [];
+const powerUps: PowerUp[] = [];
 const ghosts: Ghost[] = [
   new Ghost({
     color: "pink",
@@ -278,6 +280,17 @@ map.forEach((row, rowIndex) => {
           })
         );
         break;
+
+      case "p":
+        powerUps.push(
+          new PowerUp({
+            position: {
+              x: cellIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
+              y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
+            },
+          })
+        );
+        break;
     }
   });
 });
@@ -360,8 +373,63 @@ function animate() {
     }
   }
 
-  // Detect pellet collision
-  for (let pelletIndex = pellets.length - 1; 0 < pelletIndex; pelletIndex--) {
+  // Detect power ups collison
+  for (
+    let powerUpIndex = powerUps.length - 1;
+    0 <= powerUpIndex;
+    powerUpIndex--
+  ) {
+    const powerUp = powerUps[powerUpIndex];
+    powerUp.draw();
+
+    // Player collides with power up
+    if (
+      Math.hypot(
+        powerUp.position.x - player.position.x,
+        powerUp.position.y - player.position.y
+      ) <
+      powerUp.radius + player.radius
+    ) {
+      console.log("POWERUPS SPLICED");
+      powerUps.splice(powerUpIndex, 1);
+      ghosts.forEach((ghost) => {
+        ghost.scared = true;
+
+        // End ghost being scared altogether
+        setTimeout(() => {
+          ghost.scared = false;
+        }, 5000);
+      });
+      score += 20;
+      if (!scoreElement) {
+        console.error("Score element is missing!");
+        return;
+      } else {
+        scoreElement.innerHTML = score.toString();
+      }
+    }
+  }
+
+  // Lose game scenario (ghost & player collision)
+  for (let ghostIndex = ghosts.length - 1; 0 <= ghostIndex; ghostIndex--) {
+    const ghost = ghosts[ghostIndex];
+    if (
+      Math.hypot(
+        ghost.position.x - player.position.x,
+        ghost.position.y - player.position.y
+      ) <
+      ghost.radius + player.radius
+    ) {
+      if (ghost.scared) {
+        ghosts.splice(ghostIndex, 1);
+      } else {
+        cancelAnimationFrame(animationId);
+      }
+    }
+  }
+
+  // Detect player / pellet collision
+  for (let pelletIndex = pellets.length - 1; 0 <= pelletIndex; pelletIndex--) {
     const pellet = pellets[pelletIndex];
 
     pellet.draw();
@@ -396,16 +464,6 @@ function animate() {
   player.update();
   ghosts.forEach((ghost) => {
     ghost.update();
-    // Lose game scenario
-    if (
-      Math.hypot(
-        ghost.position.x - player.position.x,
-        ghost.position.y - player.position.y
-      ) <
-      ghost.radius + player.radius
-    ) {
-      cancelAnimationFrame(animationId);
-    }
     const collisions: CollisionType[] = [];
 
     boundaries.forEach((boundary) => {
