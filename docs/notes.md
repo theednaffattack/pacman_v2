@@ -7,4 +7,10 @@
 - JS tutorial [Chris Courses](https://www.youtube.com/watch?v=5IMXpp3rohQ&ab_channel=ChrisCourses)
 - Alternate tutorial for ideas [Traversy Media](https://www.youtube.com/watch?v=YBtzzVwrTeE&ab_channel=TraversyMedia)
 
+## Advanced Todos
+
 - Notes on "teleporting" through game map edges [How to "teleport to the opposite side of the canvas when reaching the edge"?](https://forum.processing.org/two/discussion/19329/#Comment_80234)
+
+- Notes on blinking:
+- 1. [StackOverflow](https://stackoverflow.com/a/19130017)
+- 2. [Knowledge Base - YouTube](https://www.youtube.com/watch?v=8JXA1_UmupI)
