@@ -428,6 +428,12 @@ function animate() {
     }
   }
 
+  // Win condition
+  if (pellets.length === 0) {
+    console.log("You win");
+    cancelAnimationFrame(animationId);
+  }
+
   // Detect player / pellet collision
   for (let pelletIndex = pellets.length - 1; 0 <= pelletIndex; pelletIndex--) {
     const pellet = pellets[pelletIndex];
