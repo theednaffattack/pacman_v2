@@ -13,12 +13,14 @@ export class Ghost {
   radius: number;
   speed: number;
   velocity: VelocityType;
+  scared: boolean;
   static speed = 2;
   constructor({ color = "red", position, speed, velocity }: GhostConstructor) {
     this.position = position;
     this.velocity = velocity;
     this.radius = 15;
     // this.speed = 2;
+    this.scared = false;
     this.speed = speed;
     this.color = color;
     this.prevCollisions = [];
@@ -30,7 +32,7 @@ export class Ghost {
     }
     context.beginPath();
     context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = this.color;
+    context.fillStyle = this.scared ? "blue" : this.color;
     context.fill();
     context.closePath();
   }
