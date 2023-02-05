@@ -20,5 +20,14 @@ A pretty simple pacman demo.
 
 ## Advanced
 
-1. [ ] Improve ghost graphics
-2. [ ] Create pipes that "scroll through" from one side of the screen to the other
+1. [ ] Scared ghosts flash when expiring
+2. [ ] Ghost sprites
+3. [ ] Ghosts spawn in cage
+4. [ ] Multiple lives
+5. [ ] Item bonuses to increase score
+6. [ ] Score labels on ghost and power-up hit
+7. [ ] Next level (more levels)
+8. [ ] Progressively faster ghosts
+9. [ ] Start and pause screen
+10. [ ] Game over screen
+11. [ ] Sound and audio
