@@ -1,7 +1,9 @@
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
+import { Ghost } from "./ghost-class";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
+import { CollisionType } from "./types";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
