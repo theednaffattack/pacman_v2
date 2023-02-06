@@ -27,10 +27,6 @@ type AnimateType = {
 
 // BEG ANIMATE
 export function animate({ animationId, player, score }: AnimateType) {
-  animationId = requestAnimationFrame(
-    animate.bind(null, { animationId, ghosts, player, score })
-  );
-
   // Use our guard clause again
   if (!context) {
     console.error(canvasErrorString);
@@ -41,6 +37,9 @@ export function animate({ animationId, player, score }: AnimateType) {
   // Only the updated player position
   context.clearRect(0, 0, canvas.width, canvas.height);
 
+  animationId = requestAnimationFrame(
+    animate.bind(null, { animationId, ghosts, player, score })
+  );
   // Character movement
   if (keys.ArrowUp.pressed && lastKey === "ArrowUp") {
     for (let i = 0; i < boundaries.length; i++) {
