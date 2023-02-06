@@ -1,3 +1,7 @@
+import { Boundary } from "./boundary-class";
+import { Pellet } from "./pellet-class";
+import { PowerUp } from "./power-up-class";
+
 export type PositionType = {
   x: number;
   y: number;
@@ -65,4 +69,13 @@ export type SpriteGhostTypes = {
   eaten: GhostSpriteIndexType;
   scared: GhostSpriteIndexType;
   flash: GhostSpriteIndexType;
+};
+
+export type KeyType = "" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight";
+
+export type InitType = {
+  animationId: number;
+  boundaries: Boundary[];
+  pellets: Pellet[];
+  powerUps: PowerUp[];
 };
