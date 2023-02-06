@@ -19,3 +19,9 @@
 - Drawing sprites [CodeHS](https://codehs.com/tutorial/andy/Programming_Sprites_in_JavaScript)
 
 - Game sound [W3Schools](https://www.w3schools.com/graphics/game_sound.asp)
+
+- Game pause [StackOverflow](https://stackoverflow.com/a/43814511)
+
+- Animation function w/ arguments [StackOverflow](https://stackoverflow.com/a/59192231)
+
+- Restart game [StackOverflow](https://stackoverflow.com/a/36869864)
