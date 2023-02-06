@@ -9,10 +9,16 @@
   </head>
   <body>
     <div id="outer-container">
-      <div class="info-box">
-        <p>
-          <span>Score: <span id="score">0</span></span>
-        </p>
+      <div id="display-and-control">
+        <div class="info-box">
+          <p>
+            <span>Score: <span id="score">0</span></span>
+          </p>
+        </div>
+        <div id="controls">
+          <button type="button" id="pause-button">resume</button>
+          <button type="button" id="reset-button">reset</button>
+        </div>
       </div>
       <div id="canvas-container">
         <canvas></canvas>
