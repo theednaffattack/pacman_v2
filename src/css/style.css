@@ -40,3 +40,13 @@ canvas {
   transform: translateY(-50%);
   /* transform: translateX(50%); */
 }
+
+#display-and-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#controls {
+  padding-left: 12px;
+}
