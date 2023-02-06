@@ -74,7 +74,6 @@ export type SpriteGhostTypes = {
 export type KeyType = "" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight";
 
 export type InitType = {
-  animationId: number;
   boundaries: Boundary[];
   pellets: Pellet[];
   powerUps: PowerUp[];

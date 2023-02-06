@@ -2,7 +2,7 @@ import { animate } from "./animate";
 import { Boundary } from "./boundary-class";
 import { Ghost } from "./ghost-class";
 import { ghosts } from "./ghosts";
-import { init } from "./init";
+import { initGameArea } from "./init-game-area";
 import { levelOneMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
@@ -55,33 +55,39 @@ export let lastKey: KeyType = "";
 // Start game
 // init({ boundaries, pellets, player, powerUps });
 
-init({
-  animationId,
+initGameArea({
   boundaries,
-  // ghosts: [],
   pellets,
-  // player: new Player({
-  //   position: {
-  //     x: Boundary.cellWidth + Boundary.cellWidth / 2,
-  //     y: Boundary.cellHeight + Boundary.cellHeight / 2,
-  //   },
-  //   velocity: { x: 0, y: 0 },
-  // }),
   powerUps,
 });
 
 animate({ animationId, ghosts, player, score });
+
+// Event Listeners
 const restartButton = document.getElementById("reset-button");
 
 if (restartButton) {
   restartButton.addEventListener("click", () => {
     // Add restart logic here
+    paused = true;
+    let newGhosts: Ghost[] = [];
+    animate({
+      animationId,
+      ghosts: newGhosts,
+      player: new Player({
+        position: {
+          x: Boundary.cellWidth + Boundary.cellWidth / 2,
+          y: Boundary.cellHeight + Boundary.cellHeight / 2,
+        },
+        velocity: { x: 0, y: 0 },
+      }),
+      score,
+    });
   });
 }
 
 const pauseButton = document.getElementById("pause-button");
 
-// Event Listeners
 if (pauseButton) {
   pauseButton.addEventListener("click", () => {
     if (!paused) {

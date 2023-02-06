@@ -6,7 +6,7 @@ import { PowerUp } from "./power-up-class";
 import type { InitType } from "./types";
 
 // Additional cases
-export function init({ boundaries, pellets, powerUps }: InitType) {
+export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
   levelOneMap.forEach((row, rowIndex) => {
     row.forEach((symbol, cellIndex) => {
       switch (symbol) {
