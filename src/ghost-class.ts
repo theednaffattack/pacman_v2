@@ -79,12 +79,12 @@ export class Ghost {
       color = "pink";
     }
 
-    // GHOSTS AS CIRCLES
-    context.beginPath();
-    context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = this.scared ? "blue" : color;
-    context.fill();
-    context.closePath();
+    // // GHOSTS AS CIRCLES
+    // context.beginPath();
+    // context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    // context.fillStyle = this.scared ? "blue" : color;
+    // context.fill();
+    // context.closePath();
 
     let spritePosition: {
       x: number;
@@ -123,8 +123,8 @@ export class Ghost {
         spritePosition.y,
         SPRITE_WIDTH,
         SPRITE_HEIGHT,
-        this.position.x / 2,
-        this.position.y / 2,
+        this.position.x - SPRITE_WIDTH / 2,
+        this.position.y - SPRITE_HEIGHT / 2,
         SPRITE_WIDTH,
         SPRITE_HEIGHT
       );
