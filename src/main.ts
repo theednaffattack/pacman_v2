@@ -4,6 +4,7 @@ import { Ghost } from "./ghost-class";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
+import { Sound } from "./sound-class";
 import { CollisionType } from "./types";
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
@@ -36,25 +37,58 @@ canvas.width = map[0].length * tileSize;
 canvas.height = map.length * tileSize;
 
 export const canvasErrorString = "Canvas context is undefined or null!";
-
+const pinky = "";
+const inky = "";
+const blinky = "";
+const clyde = "";
+const spriteURL = "./src/image/ghost_sprite.png";
+const sprite = createImage(spriteURL);
 const pellets: Pellet[] = [];
+let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
 const boundaries: Boundary[] = [];
 const powerUps: PowerUp[] = [];
 const ghosts: Ghost[] = [
   new Ghost({
-    color: "pink",
+    name: "pinky",
     position: {
+      // x = column, y = row
       x: Boundary.cellWidth * 6 + Boundary.cellWidth / 2,
-      y: Boundary.cellHeight + Boundary.cellHeight / 2,
+      y: Boundary.cellHeight * 3 + Boundary.cellHeight / 2,
+    },
+    image: sprite,
+    speed: 2,
+    spriteIndex: [3, 0],
+    velocity: { x: Ghost.speed, y: 0 },
+  }),
+  new Ghost({
+    name: "blinky",
+    image: sprite,
+    spriteIndex: [0, 0],
+    position: {
+      x: Boundary.cellWidth * 9 + Boundary.cellWidth / 2,
+      y: Boundary.cellHeight * 7 + Boundary.cellHeight / 2,
     },
     speed: 2,
     velocity: { x: Ghost.speed, y: 0 },
   }),
   new Ghost({
-    color: "red",
+    name: "inky",
+    image: sprite,
+    spriteIndex: [3, 2],
     position: {
-      x: Boundary.cellWidth * 6 + Boundary.cellWidth / 2,
-      y: Boundary.cellHeight * 3 + Boundary.cellHeight / 2,
+      x: Boundary.cellWidth * 8 + Boundary.cellWidth / 2,
+      y: Boundary.cellHeight * 11 + Boundary.cellHeight / 2,
+    },
+    speed: 2,
+    velocity: { x: Ghost.speed, y: 0 },
+  }),
+  new Ghost({
+    name: "clyde",
+    image: sprite,
+    spriteIndex: [2, 1],
+    position: {
+      x: Boundary.cellWidth * 2 + Boundary.cellWidth / 2,
+      y: Boundary.cellHeight * 11 + Boundary.cellHeight / 2,
     },
     speed: 2,
     velocity: { x: Ghost.speed, y: 0 },
@@ -81,9 +115,12 @@ let lastKey: KeyType = "";
 
 let score = 0;
 
-function createImage(src: string) {
+export function createImage(src: string) {
   const image = new Image();
   image.src = src;
+  // image.onload = function () {
+  //   console.log("LOADED: ", src);
+  // };
   return image;
 }
 
@@ -390,10 +427,14 @@ function animate() {
       ) <
       powerUp.radius + player.radius
     ) {
-      console.log("POWERUPS SPLICED");
       powerUps.splice(powerUpIndex, 1);
       ghosts.forEach((ghost) => {
+        // const originalColor = ghost.color;
         ghost.scared = true;
+
+        setInterval(() => {
+          ghost.blinking = true;
+        }, 500);
 
         // End ghost being scared altogether
         setTimeout(() => {
@@ -423,6 +464,8 @@ function animate() {
       if (ghost.scared) {
         ghosts.splice(ghostIndex, 1);
       } else {
+        let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
+        loseGameSound.play();
         cancelAnimationFrame(animationId);
       }
     }
@@ -449,6 +492,7 @@ function animate() {
     ) {
       pellets.splice(pelletIndex, 1);
       score += 10;
+      eatPelletSound.play();
       if (!scoreElement) {
         console.error("Score element is missing!");
         return;
