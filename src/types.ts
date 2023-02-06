@@ -20,11 +20,34 @@ export interface PlayerConstructor {
 }
 
 export interface GhostConstructor extends PlayerConstructor {
+  name: GhostNameType;
+  image: HTMLImageElement;
   position: PositionType;
   speed: number;
+  spriteIndex: [number, number];
   velocity: VelocityType;
-  color: string;
 }
+
+export type GhostSpriteIndexType = {
+  top: [number, number];
+  right: [number, number];
+  bottom: [number, number];
+  left: [number, number];
+};
+
+export type GhostNameType =
+  | "blinky"
+  | "pinky"
+  | "inky"
+  | "clyde"
+  | "scared"
+  | "flash"
+  | "eaten";
+
+export type RowColumnType = {
+  row: number;
+  col: number;
+};
 
 export type PlayerType = {
   position: PositionType;
@@ -33,3 +56,13 @@ export type PlayerType = {
 };
 
 export type CollisionType = "top" | "right" | "bottom" | "left";
+
+export type SpriteGhostTypes = {
+  blinky: GhostSpriteIndexType;
+  inky: GhostSpriteIndexType;
+  pinky: GhostSpriteIndexType;
+  clyde: GhostSpriteIndexType;
+  eaten: GhostSpriteIndexType;
+  scared: GhostSpriteIndexType;
+  flash: GhostSpriteIndexType;
+};
