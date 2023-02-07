@@ -39,6 +39,7 @@ let lastKey: KeyType = "";
 let ghosts = retrieveGhosts(context);
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
 let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
+let eatGhostSound = new Sound({ src: "./src/audio/kill.mp3" });
 let player = new Player({
   context,
   position: {
@@ -151,9 +152,9 @@ function animate() {
         // const originalColor = ghost.color;
         ghost.scared = true;
 
-        setInterval(() => {
-          ghost.blinking = true;
-        }, 500);
+        // setInterval(() => {
+        //   ghost.blinking = true;
+        // }, 500);
 
         // End ghost being scared altogether
         setTimeout(() => {
@@ -180,8 +181,11 @@ function animate() {
       ) <
       ghost.radius + player.radius
     ) {
+      // Eat ghost scenario
       if (ghost.scared) {
-        ghosts.splice(ghostIndex, 1);
+        // ghosts.splice(ghostIndex, 1);
+        ghost.eaten = true;
+        eatGhostSound.play();
       } else {
         loseGameSound.play();
         cancelAnimationFrame(animationId);
@@ -414,16 +418,12 @@ if (pauseButton) {
     }
   });
 }
-const update = document.querySelector("#show-value");
+
 addEventListener("keydown", ({ key }) => {
   switch (key) {
     case "ArrowUp":
       keys.ArrowUp.pressed = true;
       lastKey = "ArrowUp";
-      if (!update) {
-        throw new Error("'show-value' element is missing!");
-      }
-      update.innerHTML = `ArrowUp pressed`;
       break;
     case "ArrowDown":
       keys.ArrowDown.pressed = true;
@@ -447,11 +447,6 @@ addEventListener("keyup", ({ key }) => {
   switch (key) {
     case "ArrowUp":
       keys.ArrowUp.pressed = false;
-      if (!update) {
-        throw new Error("show-value elemnet is missing");
-      }
-      update.innerHTML = ``;
-
       break;
 
     case "ArrowDown":
