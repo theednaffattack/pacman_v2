@@ -1,7 +1,6 @@
 import { SPRITE_HEIGHT, SPRITE_WIDTH } from "./constants";
-import { canvasErrorString, context } from "./main";
 import { spritePositionToImagePosition } from "./spirte-position-to-image-position";
-import {
+import type {
   CollisionType,
   GhostConstructor,
   GhostNameType,
@@ -12,6 +11,7 @@ import {
 
 export class Ghost {
   blinking: boolean;
+  context: CanvasRenderingContext2D;
   image: HTMLImageElement;
   name: GhostNameType;
   position: PositionType;
@@ -23,6 +23,7 @@ export class Ghost {
   speed: number;
   velocity: VelocityType;
   constructor({
+    context,
     name,
     image,
     position,
@@ -30,6 +31,7 @@ export class Ghost {
     spriteIndex,
     velocity,
   }: GhostConstructor) {
+    this.context = context;
     this.position = position;
     this.velocity = velocity;
     this.radius = SPRITE_WIDTH / 2;
@@ -43,11 +45,6 @@ export class Ghost {
     this.spriteIndex = spriteIndex;
   }
   draw() {
-    if (!context) {
-      console.error(canvasErrorString);
-      return;
-    }
-
     const sprites: SpriteGhostTypes = {
       blinky: {
         top: [0, 0],
@@ -117,7 +114,7 @@ export class Ghost {
       });
     }
     if (!this.scared) {
-      context.drawImage(
+      this.context.drawImage(
         this.image,
         spritePosition.x,
         spritePosition.y,
@@ -136,7 +133,7 @@ export class Ghost {
 
       console.log("SCARED", { spritePosition });
 
-      context.drawImage(
+      this.context.drawImage(
         this.image,
         spritePosition.x,
         spritePosition.y,
