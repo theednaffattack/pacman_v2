@@ -25,3 +25,4 @@
 - Animation function w/ arguments [StackOverflow](https://stackoverflow.com/a/59192231)
 
 - Restart game [StackOverflow](https://stackoverflow.com/a/36869864)
+- Restart game cont [JS Fiddle example](https://jsfiddle.net/11wrorox/)
