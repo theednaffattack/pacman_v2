@@ -15,6 +15,7 @@
 - Notes on blinking:
 - 1. [StackOverflow](https://stackoverflow.com/a/19130017)
 - 2. [Knowledge Base - YouTube](https://www.youtube.com/watch?v=8JXA1_UmupI)
+- 3. Blinking [StackOverflow Again](https://stackoverflow.com/a/32640706)
 
 - Drawing sprites [CodeHS](https://codehs.com/tutorial/andy/Programming_Sprites_in_JavaScript)
 
