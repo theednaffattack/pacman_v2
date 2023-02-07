@@ -1,14 +1,15 @@
 import { BoundaryConstructor } from "./types";
-import { context, canvasErrorString } from "./main";
 
 export class Boundary {
+  context: CanvasRenderingContext2D;
   position;
   width: number;
   height: number;
   static cellWidth = 40;
   static cellHeight = 40;
   image;
-  constructor({ position, image }: BoundaryConstructor) {
+  constructor({ context, position, image }: BoundaryConstructor) {
+    this.context = context;
     this.position = position;
     this.width = 40;
     this.height = 40;
@@ -20,12 +21,9 @@ export class Boundary {
     // context possibly being null. Ideally
     // I'd have a custom error or function that
     // introduces a visual error state to the game.
-    if (!context) {
-      console.error(canvasErrorString);
-      return;
-    }
+
     // context.fillStyle = "blue";
     // context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    context.drawImage(this.image, this.position.x, this.position.y);
+    this.context.drawImage(this.image, this.position.x, this.position.y);
   }
 }
