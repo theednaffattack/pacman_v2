@@ -13,6 +13,7 @@ export type VelocityType = {
 };
 
 export type BoundaryConstructor = {
+  context: CanvasRenderingContext2D;
   position: PositionType;
   image: HTMLImageElement;
   color?: string;
@@ -21,9 +22,11 @@ export type BoundaryConstructor = {
 export interface PlayerConstructor {
   position: PositionType;
   velocity: VelocityType;
+  context: CanvasRenderingContext2D;
 }
 
 export interface GhostConstructor extends PlayerConstructor {
+  context: CanvasRenderingContext2D;
   name: GhostNameType;
   image: HTMLImageElement;
   position: PositionType;
@@ -75,6 +78,22 @@ export type KeyType = "" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight";
 
 export type InitType = {
   boundaries: Boundary[];
+  context: CanvasRenderingContext2D;
   pellets: Pellet[];
   powerUps: PowerUp[];
+};
+
+export type KeysRegisterType = {
+  ArrowUp: {
+    pressed: boolean;
+  };
+  ArrowDown: {
+    pressed: boolean;
+  };
+  ArrowLeft: {
+    pressed: boolean;
+  };
+  ArrowRight: {
+    pressed: boolean;
+  };
 };
