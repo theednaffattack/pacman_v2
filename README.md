@@ -21,7 +21,7 @@ A pretty simple pacman demo.
 ## Advanced
 
 1. [ ] Scared ghosts flash when expiring
-2. [ ] Ghost sprites
+2. [x] Ghost sprites
 3. [ ] Ghosts spawn in cage
 4. [ ] Multiple lives
 5. [ ] Item bonuses to increase score
@@ -30,4 +30,4 @@ A pretty simple pacman demo.
 8. [ ] Progressively faster ghosts
 9. [ ] Start and pause screen
 10. [ ] Game over screen
-11. [ ] Sound and audio
+11. [x] Sound and audio
