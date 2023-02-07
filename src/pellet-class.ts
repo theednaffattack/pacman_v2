@@ -2,22 +2,29 @@ import { PositionType } from "./types";
 import { context, canvasErrorString } from "./main";
 
 export class Pellet {
+  context: CanvasRenderingContext2D;
   position: PositionType;
   radius: number;
-  constructor({ position }: { position: PositionType }) {
+  constructor({
+    context,
+    position,
+  }: { position: PositionType } & { context: CanvasRenderingContext2D }) {
+    this.context = context;
     this.position = position;
     this.radius = 3;
   }
 
   draw() {
-    if (!context) {
-      console.error(canvasErrorString);
-      return;
-    }
-    context.beginPath();
-    context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = "white";
-    context.fill();
-    context.closePath();
+    this.context.beginPath();
+    this.context.arc(
+      this.position.x,
+      this.position.y,
+      this.radius,
+      0,
+      Math.PI * 2
+    );
+    this.context.fillStyle = "white";
+    this.context.fill();
+    this.context.closePath();
   }
 }
