@@ -400,9 +400,14 @@ if (restartButton) {
       },
       velocity: { x: 0, y: 0 },
     });
+    // End the animation
     cancelAnimationFrame(animationId);
+
+    // Prepare to restart by resetting 'pause' info
     restartButton.innerHTML = "pause";
     paused = false;
+
+    // Finally, animate (restart)
     animate();
   });
 }
