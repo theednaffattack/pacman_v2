@@ -29,7 +29,7 @@ if (!scoreElement) {
   throw new Error("Score element is undefined");
 }
 
-let paused = true;
+let paused = false;
 let pellets: Pellet[] = [];
 let boundaries: Boundary[] = [];
 let powerUps: PowerUp[] = [];
@@ -195,7 +195,6 @@ function animate() {
 
   // Win condition
   if (pellets.length === 0) {
-    console.log("You win");
     cancelAnimationFrame(animationId);
   }
 
@@ -401,7 +400,10 @@ if (restartButton) {
       },
       velocity: { x: 0, y: 0 },
     });
-    // animate();
+    cancelAnimationFrame(animationId);
+    restartButton.innerHTML = "pause";
+    paused = false;
+    animate();
   });
 }
 
