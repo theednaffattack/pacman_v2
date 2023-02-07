@@ -6,13 +6,19 @@ import { PowerUp } from "./power-up-class";
 import type { InitType } from "./types";
 
 // Additional cases
-export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
+export function initGameArea({
+  boundaries,
+  context,
+  pellets,
+  powerUps,
+}: InitType) {
   levelOneMap.forEach((row, rowIndex) => {
     row.forEach((symbol, cellIndex) => {
       switch (symbol) {
         case "-":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -24,6 +30,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "|":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -35,6 +42,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "1":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -46,6 +54,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "2":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -57,6 +66,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "3":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -68,6 +78,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "4":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -79,6 +90,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "b":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: Boundary.cellWidth * cellIndex,
                 y: Boundary.cellHeight * rowIndex,
@@ -90,6 +102,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "[":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -101,6 +114,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "]":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -112,6 +126,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "_":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -123,6 +138,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "^":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -134,6 +150,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "+":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -145,6 +162,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "5":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -157,6 +175,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "6":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -169,6 +188,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "7":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -181,6 +201,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "8":
           boundaries.push(
             new Boundary({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
@@ -192,6 +213,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case ".":
           pellets.push(
             new Pellet({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
                 y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
@@ -203,6 +225,7 @@ export function initGameArea({ boundaries, pellets, powerUps }: InitType) {
         case "p":
           powerUps.push(
             new PowerUp({
+              context,
               position: {
                 x: cellIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
                 y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
