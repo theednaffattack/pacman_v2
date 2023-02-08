@@ -149,17 +149,16 @@ function animate() {
     ) {
       powerUps.splice(powerUpIndex, 1);
       ghosts.forEach((ghost) => {
-        // const originalColor = ghost.color;
         ghost.scared = true;
 
-        // setInterval(() => {
-        //   ghost.blinking = true;
-        // }, 500);
+        setTimeout(() => {
+          ghost.blinking = true;
+        }, 5000);
 
         // End ghost being scared altogether
         setTimeout(() => {
           ghost.scared = false;
-        }, 5000);
+        }, 10000);
       });
       score += 20;
       if (!scoreElement) {
@@ -213,7 +212,9 @@ function animate() {
     ) {
       pellets.splice(pelletIndex, 1);
       score += 10;
-      eatPelletSound.play();
+      if (player.madeTheFirstMove) {
+        eatPelletSound.play();
+      }
       if (!scoreElement) {
         console.error("Score element is missing!");
         return;
@@ -391,6 +392,7 @@ if (restartButton) {
     // Add restart logic here
     paused = true;
     ghosts = [];
+    pellets = [];
     ghosts = retrieveGhosts(context);
     player = new Player({
       context,
@@ -402,6 +404,15 @@ if (restartButton) {
     });
     // End the animation
     cancelAnimationFrame(animationId);
+
+    // Reset the game board
+
+    initGameArea({
+      boundaries,
+      context,
+      pellets,
+      powerUps,
+    });
 
     // Prepare to restart by resetting 'pause' info
     restartButton.innerHTML = "pause";
@@ -429,14 +440,23 @@ if (pauseButton) {
 addEventListener("keydown", ({ key }) => {
   switch (key) {
     case "ArrowUp":
+      if (!player.madeTheFirstMove) {
+        player.madeTheFirstMove = true;
+      }
       keys.ArrowUp.pressed = true;
       lastKey = "ArrowUp";
       break;
     case "ArrowDown":
+      if (!player.madeTheFirstMove) {
+        player.madeTheFirstMove = true;
+      }
       keys.ArrowDown.pressed = true;
       lastKey = "ArrowDown";
       break;
     case "ArrowLeft":
+      if (!player.madeTheFirstMove) {
+        player.madeTheFirstMove = true;
+      }
       keys.ArrowLeft.pressed = true;
       lastKey = "ArrowLeft";
 
