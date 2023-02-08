@@ -5,6 +5,7 @@ export class Player {
   context: CanvasRenderingContext2D;
   openRate: number;
   position: PositionType;
+  powerUpActive: boolean;
   radians: number;
   radius: number;
   rotation: number;
@@ -17,6 +18,7 @@ export class Player {
     this.radius = 15;
     this.radians = 0.75;
     this.rotation = 0;
+    this.powerUpActive = false;
     this.context = context;
   }
   draw() {
