@@ -1,0 +1,51 @@
+// // BEG GHOSTS AS CIRCLES
+// let color = "";
+// if (this.name === "blinky") {
+//   color = "red";
+// }
+
+// if (this.name === "inky") {
+//   color = "cyan";
+// }
+
+// if (this.name === "clyde") {
+//   color = "orange";
+// }
+// if (this.name === "pinky") {
+//   color = "pink";
+// }
+
+// this.context.beginPath();
+// this.context.arc(
+//   this.position.x,
+//   this.position.y,
+//   this.radius,
+//   0,
+//   Math.PI * 2
+// );
+// this.context.fillStyle = this.scared ? "blue" : color;
+// this.context.fill();
+// this.context.closePath();
+
+// let spritePosition: {
+//   x: number;
+//   y: number;
+// } = { x: sprites[this.name].right[1], y: sprites[this.name].right[0] };
+
+// // FROM EXAMPLE
+// if (pacman.powerUpActive) {
+//   this.#setImagePowerUpIsActive(pacman);
+// }
+// else {
+//   this.image = this.normalGhost;
+// }
+// const { x, y } = spritePicker({ ghost: this });
+
+// ctx.drawImage(
+//   this.image,
+//   this.position.x,
+//   this.position.y,
+//   TILE_SIZE,
+//   TILE_SIZE
+// );
+// // END GHOSTS AS CIRCLES
