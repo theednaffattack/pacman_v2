@@ -17,6 +17,9 @@ let keys: KeysRegisterType = {
   ArrowRight: { pressed: false },
 };
 
+const activeSec = 6;
+const expireWarningSec = 3;
+
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
 const scoreElement = document.getElementById("score");
@@ -29,7 +32,7 @@ if (!scoreElement) {
   throw new Error("Score element is undefined");
 }
 
-let paused = true;
+let paused = false;
 let pellets: Pellet[] = [];
 let boundaries: Boundary[] = [];
 let powerUps: PowerUp[] = [];
@@ -40,6 +43,7 @@ let ghosts = retrieveGhosts(context);
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
 let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
 let eatGhostSound = new Sound({ src: "./src/audio/kill.mp3" });
+let eatPowerUpSound = new Sound({ src: "./src/audio/power_dot.wav" });
 let player = new Player({
   context,
   position: {
@@ -130,7 +134,7 @@ function animate() {
     }
   }
 
-  // Detect power ups collison
+  // Draw powerUps Detect power ups collison
   for (
     let powerUpIndex = powerUps.length - 1;
     0 <= powerUpIndex;
@@ -139,7 +143,7 @@ function animate() {
     const powerUp = powerUps[powerUpIndex];
     powerUp.draw();
 
-    // Player collides with power up
+    // Player collides with power up eat powerup
     if (
       Math.hypot(
         powerUp.position.x - player.position.x,
@@ -148,18 +152,43 @@ function animate() {
       powerUp.radius + player.radius
     ) {
       powerUps.splice(powerUpIndex, 1);
-      ghosts.forEach((ghost) => {
-        // const originalColor = ghost.color;
-        ghost.scared = true;
+      player.powerUpActive = true;
+      player.powerUpAboutToExpire = false;
+      eatPowerUpSound.play();
 
-        // setInterval(() => {
-        //   ghost.blinking = true;
-        // }, 500);
+      // If we already have active timers we
+      // need to clear them before setting new ones.
+      player.timers.forEach((timer) => {
+        clearTimeout(timer);
+      });
 
-        // End ghost being scared altogether
-        setTimeout(() => {
+      // Now clear out the timers array
+      player.timers = [];
+
+      // Create timers for powered up state
+      let powerDotTimer = setTimeout(() => {
+        player.powerUpActive = false;
+        player.powerUpAboutToExpire = false;
+        ghosts.forEach((ghost) => {
           ghost.scared = false;
-        }, 5000);
+          ghost.eaten = false;
+        });
+      }, 1000 * activeSec);
+
+      player.timers.push(powerDotTimer);
+
+      let powerDotAboutToExpireTimer = setTimeout(() => {
+        player.powerUpAboutToExpire = true;
+      }, 1000 * expireWarningSec);
+
+      player.timers.push(powerDotAboutToExpireTimer);
+
+      ghosts.forEach((ghost) => {
+        if (player.powerUpActive) {
+          ghost.scared = true;
+        } else {
+          ghost.scared = false;
+        }
       });
       score += 20;
       if (!scoreElement) {
@@ -182,10 +211,12 @@ function animate() {
       ghost.radius + player.radius
     ) {
       // Eat ghost scenario
-      if (ghost.scared) {
-        // ghosts.splice(ghostIndex, 1);
+      if (ghost.scared && !ghost.eaten) {
         ghost.eaten = true;
+        score += 30;
         eatGhostSound.play();
+      } else if (ghost.scared && ghost.eaten) {
+        // do nothing
       } else {
         loseGameSound.play();
         cancelAnimationFrame(animationId);
@@ -193,13 +224,15 @@ function animate() {
     }
   }
 
-  // Win condition
+  // Win level condition
   if (pellets.length === 0) {
-    console.log("You win");
     cancelAnimationFrame(animationId);
+    // TODO: 1. Modal congratulations
+    // TODO: 2. Generate game board and ghosts for next level.
+    // TODO: 3. If it's the final level, end the game.
   }
 
-  // Detect player / pellet collision
+  // Draw pellets Detect player / pellet collision (eat pellet)
   for (let pelletIndex = pellets.length - 1; 0 <= pelletIndex; pelletIndex--) {
     const pellet = pellets[pelletIndex];
 
@@ -214,7 +247,9 @@ function animate() {
     ) {
       pellets.splice(pelletIndex, 1);
       score += 10;
-      eatPelletSound.play();
+      if (player.madeTheFirstMove) {
+        eatPelletSound.play();
+      }
       if (!scoreElement) {
         console.error("Score element is missing!");
         return;
@@ -241,9 +276,9 @@ function animate() {
   }
 
   ghosts.forEach((ghost) => {
-    ghost.draw();
+    ghost.draw(context, player);
     if (!paused) {
-      ghost.update();
+      ghost.update(context, player);
     }
     const collisions: CollisionType[] = [];
 
@@ -392,6 +427,7 @@ if (restartButton) {
     // Add restart logic here
     paused = true;
     ghosts = [];
+    pellets = [];
     ghosts = retrieveGhosts(context);
     player = new Player({
       context,
@@ -401,7 +437,23 @@ if (restartButton) {
       },
       velocity: { x: 0, y: 0 },
     });
-    // animate();
+    // End the animation
+    cancelAnimationFrame(animationId);
+
+    // Reset the game board
+
+    initGameArea({
+      boundaries,
+      context,
+      pellets,
+      powerUps,
+    });
+
+    // Prepare to restart by resetting 'pause' info
+    paused = false;
+
+    // Finally, animate (restart)
+    animate();
   });
 }
 
@@ -422,14 +474,23 @@ if (pauseButton) {
 addEventListener("keydown", ({ key }) => {
   switch (key) {
     case "ArrowUp":
+      if (!player.madeTheFirstMove) {
+        player.madeTheFirstMove = true;
+      }
       keys.ArrowUp.pressed = true;
       lastKey = "ArrowUp";
       break;
     case "ArrowDown":
+      if (!player.madeTheFirstMove) {
+        player.madeTheFirstMove = true;
+      }
       keys.ArrowDown.pressed = true;
       lastKey = "ArrowDown";
       break;
     case "ArrowLeft":
+      if (!player.madeTheFirstMove) {
+        player.madeTheFirstMove = true;
+      }
       keys.ArrowLeft.pressed = true;
       lastKey = "ArrowLeft";
 

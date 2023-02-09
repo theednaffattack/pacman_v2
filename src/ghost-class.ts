@@ -1,11 +1,13 @@
 import { SPRITE_HEIGHT, SPRITE_WIDTH } from "./constants";
+import { Player } from "./player-class";
 import { spritePositionToImagePosition } from "./spirte-position-to-image-position";
+import { sprites } from "./sprite-map";
+import { spritePicker } from "./spritePicker";
 import type {
   CollisionType,
   GhostConstructor,
   GhostNameType,
   PositionType,
-  SpriteGhostTypes,
   VelocityType,
 } from "./types";
 
@@ -19,6 +21,8 @@ export class Ghost {
   prevCollisions: CollisionType[];
   radius: number;
   scared: boolean;
+  scaredAboutToExpireTimer: number;
+  scaredAboutToExpireTimerDefault: number;
   spriteIndex: [number, number];
   static speed = 2;
   speed: number;
@@ -43,114 +47,33 @@ export class Ghost {
     this.name = name;
     this.image = image;
     this.prevCollisions = [];
+    this.scaredAboutToExpireTimerDefault = 10;
+    this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
     this.spriteIndex = spriteIndex;
   }
-  draw() {
-    const sprites: SpriteGhostTypes = {
-      blinky: {
-        top: [0, 0],
-        right: [1, 0],
-        bottom: [1, 1],
-        left: [0, 1],
-      },
-      inky: { top: [2, 2], right: [3, 2], bottom: [3, 3], left: [2, 3] },
-      pinky: { top: [0, 2], right: [3, 0], bottom: [3, 1], left: [2, 1] },
-      clyde: { top: [2, 0], right: [1, 2], bottom: [1, 3], left: [0, 3] },
-      eaten: { top: [4, 2], right: [5, 2], bottom: [5, 3], left: [4, 3] },
-      scared: { top: [4, 0], right: [5, 0], bottom: [5, 1], left: [4, 1] },
-      flash: { top: [6, 0], right: [7, 0], bottom: [5, 3], left: [6, 1] },
-    };
 
-    // // GHOSTS AS CIRCLES
-    // let color = "";
-    // if (this.name === "blinky") {
-    //   color = "red";
-    // }
+  draw(ctx: CanvasRenderingContext2D, pacman: Player) {
+    this.#setImage(ctx, pacman);
+  }
 
-    // if (this.name === "inky") {
-    //   color = "cyan";
-    // }
+  update(ctx: CanvasRenderingContext2D, pacman: Player) {
+    this.draw(ctx, pacman);
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
 
-    // if (this.name === "clyde") {
-    //   color = "orange";
-    // }
-    // if (this.name === "pinky") {
-    //   color = "pink";
-    // }
+  #setImage(ctx: CanvasRenderingContext2D, pacman: Player) {
+    // The default normal ghost
+    let obj = spritePicker({ ghost: this, player: pacman });
 
-    // this.context.beginPath();
-    // this.context.arc(
-    //   this.position.x,
-    //   this.position.y,
-    //   this.radius,
-    //   0,
-    //   Math.PI * 2
-    // );
-    // this.context.fillStyle = this.scared ? "blue" : color;
-    // this.context.fill();
-    // this.context.closePath();
-
-    // let spritePosition: {
-    //   x: number;
-    //   y: number;
-    // } = { x: sprites[this.name].right[1], y: sprites[this.name].right[0] };
-
-    let spritePosition = { x: 0, y: 0 };
-
-    if (this.velocity.y < 0 && !this.scared) {
-      // moving up
-      spritePosition = spritePositionToImagePosition({
-        row: sprites[this.name].top[0],
-        col: sprites[this.name].top[1],
-      });
-    } else if (this.velocity.x > 0 && !this.scared) {
-      // moving right
-      spritePosition = spritePositionToImagePosition({
-        col: sprites[this.name].right[0],
-        row: sprites[this.name].right[1],
-      });
-    } else if (this.velocity.y > 0 && !this.scared) {
-      // moving down
-      spritePosition = spritePositionToImagePosition({
-        col: sprites[this.name].bottom[0],
-        row: sprites[this.name].bottom[1],
-      });
-    } else if (this.velocity.x < 0 && !this.scared) {
-      // moving left
-      spritePosition = spritePositionToImagePosition({
-        col: sprites[this.name].left[0],
-        row: sprites[this.name].left[1],
-      });
-    } else if (this.velocity.y < 0 && this.scared) {
-      // moving up - SCARED
-      spritePosition = spritePositionToImagePosition({
-        col: this.eaten ? sprites.eaten.top[0] : sprites.scared.top[0],
-        row: this.eaten ? sprites.eaten.top[1] : sprites.scared.top[1],
-      });
-    } else if (this.velocity.x > 0) {
-      // moving right - SCARED
-      spritePosition = spritePositionToImagePosition({
-        col: this.eaten ? sprites.eaten.right[0] : sprites.scared.right[0],
-        row: this.eaten ? sprites.eaten.right[1] : sprites.scared.right[1],
-      });
-    } else if (this.velocity.y > 0) {
-      // moving down - SCARED
-      spritePosition = spritePositionToImagePosition({
-        col: this.eaten ? sprites.eaten.bottom[0] : sprites.scared.bottom[0],
-        row: this.eaten ? sprites.eaten.bottom[1] : sprites.scared.bottom[1],
-      });
-    } else if (this.velocity.x < 0) {
-      // moving left - SCARED
-      spritePosition = spritePositionToImagePosition({
-        col: this.eaten ? sprites.eaten.left[0] : sprites.scared.left[0],
-        row: this.eaten ? sprites.eaten.left[1] : sprites.scared.left[1],
-      });
+    if (pacman.powerUpActive) {
+      this.#setImageWhenPowerUpIsActive(ctx, pacman);
     }
 
-    this.context.drawImage(
+    ctx.drawImage(
       this.image,
-      spritePosition.x,
-      spritePosition.y,
+      obj.x,
+      obj.y,
       SPRITE_WIDTH,
       SPRITE_HEIGHT,
       this.position.x - SPRITE_WIDTH / 2,
@@ -159,9 +82,77 @@ export class Ghost {
       SPRITE_HEIGHT
     );
   }
-  update() {
-    this.draw();
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
+
+  // Reminder, this method is only called when powerUp is active
+  #setImageWhenPowerUpIsActive(ctx: CanvasRenderingContext2D, pacman: Player) {
+    // Default scared ghost
+    let obj = spritePositionToImagePosition({ col: 9, row: 0 });
+    if (pacman.powerUpAboutToExpire) {
+      this.scaredAboutToExpireTimer--;
+      if (this.scaredAboutToExpireTimer === 0 && !this.eaten) {
+        this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
+        const isGhostImageScared =
+          JSON.stringify(spritePositionToImagePosition({ col: 9, row: 0 })) ===
+          JSON.stringify(
+            spritePositionToImagePosition({ col: obj.x, row: obj.y })
+          );
+        if (isGhostImageScared) {
+          // console.log("NOT BLINKING");
+
+          // Blink scared ghost
+          obj = spritePositionToImagePosition({ col: 9, row: 0 });
+          // this.blinking = true;
+        } else {
+          // Blink white ghost
+          obj = spritePositionToImagePosition({ col: 8, row: 0 });
+          // this.blinking = false;
+        }
+      }
+
+      // When ghosts are eaten and the power up is expiring
+      // When ghosts are eaten we care about
+      // which direction they're heading (eyeball direction)
+      if (this.eaten) {
+        let eyeDirection = { col: 0, row: 0 };
+        if (this.velocity.y < 0) {
+          eyeDirection = {
+            col: sprites.eaten.top[0],
+            row: sprites.eaten.top[1],
+          };
+        } else if (this.velocity.x > 0) {
+          eyeDirection = {
+            col: sprites.eaten.right[0],
+            row: sprites.eaten.right[1],
+          };
+        } else if (this.velocity.y > 0) {
+          eyeDirection = {
+            col: sprites.eaten.bottom[0],
+            row: sprites.eaten.bottom[1],
+          };
+        } else if (this.velocity.x < 0) {
+          eyeDirection = {
+            col: sprites.eaten.left[0],
+            row: sprites.eaten.left[1],
+          };
+        }
+
+        obj = spritePositionToImagePosition({
+          col: eyeDirection.col,
+          row: eyeDirection.row,
+        });
+      }
+
+      ctx.drawImage(
+        this.image,
+        obj.x,
+        obj.y,
+        SPRITE_WIDTH,
+        SPRITE_HEIGHT,
+        this.position.x - SPRITE_WIDTH / 2,
+        this.position.y - SPRITE_HEIGHT / 2,
+        SPRITE_WIDTH,
+        SPRITE_HEIGHT
+      );
+    }
   }
 }
