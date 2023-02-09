@@ -17,6 +17,9 @@ let keys: KeysRegisterType = {
   ArrowRight: { pressed: false },
 };
 
+const activeSec = 6;
+const expireWarningSec = 3;
+
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 
 const scoreElement = document.getElementById("score");
@@ -40,6 +43,7 @@ let ghosts = retrieveGhosts(context);
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
 let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
 let eatGhostSound = new Sound({ src: "./src/audio/kill.mp3" });
+let eatPowerUpSound = new Sound({ src: "./src/audio/power_dot.wav" });
 let player = new Player({
   context,
   position: {
@@ -130,7 +134,7 @@ function animate() {
     }
   }
 
-  // Detect power ups collison
+  // Draw powerUps Detect power ups collison
   for (
     let powerUpIndex = powerUps.length - 1;
     0 <= powerUpIndex;
@@ -139,7 +143,7 @@ function animate() {
     const powerUp = powerUps[powerUpIndex];
     powerUp.draw();
 
-    // Player collides with power up
+    // Player collides with power up eat powerup
     if (
       Math.hypot(
         powerUp.position.x - player.position.x,
@@ -148,17 +152,43 @@ function animate() {
       powerUp.radius + player.radius
     ) {
       powerUps.splice(powerUpIndex, 1);
-      ghosts.forEach((ghost) => {
-        ghost.scared = true;
+      player.powerUpActive = true;
+      player.powerUpAboutToExpire = false;
+      eatPowerUpSound.play();
 
-        setTimeout(() => {
-          ghost.blinking = true;
-        }, 5000);
+      // If we already have active timers we
+      // need to clear them before setting new ones.
+      player.timers.forEach((timer) => {
+        clearTimeout(timer);
+      });
 
-        // End ghost being scared altogether
-        setTimeout(() => {
+      // Now clear out the timers array
+      player.timers = [];
+
+      // Create timers for powered up state
+      let powerDotTimer = setTimeout(() => {
+        player.powerUpActive = false;
+        player.powerUpAboutToExpire = false;
+        ghosts.forEach((ghost) => {
           ghost.scared = false;
-        }, 10000);
+          ghost.eaten = false;
+        });
+      }, 1000 * activeSec);
+
+      player.timers.push(powerDotTimer);
+
+      let powerDotAboutToExpireTimer = setTimeout(() => {
+        player.powerUpAboutToExpire = true;
+      }, 1000 * expireWarningSec);
+
+      player.timers.push(powerDotAboutToExpireTimer);
+
+      ghosts.forEach((ghost) => {
+        if (player.powerUpActive) {
+          ghost.scared = true;
+        } else {
+          ghost.scared = false;
+        }
       });
       score += 20;
       if (!scoreElement) {
@@ -181,10 +211,12 @@ function animate() {
       ghost.radius + player.radius
     ) {
       // Eat ghost scenario
-      if (ghost.scared) {
-        // ghosts.splice(ghostIndex, 1);
+      if (ghost.scared && !ghost.eaten) {
         ghost.eaten = true;
+        score += 30;
         eatGhostSound.play();
+      } else if (ghost.scared && ghost.eaten) {
+        // do nothing
       } else {
         loseGameSound.play();
         cancelAnimationFrame(animationId);
@@ -192,12 +224,15 @@ function animate() {
     }
   }
 
-  // Win condition
+  // Win level condition
   if (pellets.length === 0) {
     cancelAnimationFrame(animationId);
+    // TODO: 1. Modal congratulations
+    // TODO: 2. Generate game board and ghosts for next level.
+    // TODO: 3. If it's the final level, end the game.
   }
 
-  // Detect player / pellet collision
+  // Draw pellets Detect player / pellet collision (eat pellet)
   for (let pelletIndex = pellets.length - 1; 0 <= pelletIndex; pelletIndex--) {
     const pellet = pellets[pelletIndex];
 
@@ -241,9 +276,9 @@ function animate() {
   }
 
   ghosts.forEach((ghost) => {
-    ghost.draw();
+    ghost.draw(context, player);
     if (!paused) {
-      ghost.update();
+      ghost.update(context, player);
     }
     const collisions: CollisionType[] = [];
 
@@ -415,7 +450,6 @@ if (restartButton) {
     });
 
     // Prepare to restart by resetting 'pause' info
-    restartButton.innerHTML = "pause";
     paused = false;
 
     // Finally, animate (restart)

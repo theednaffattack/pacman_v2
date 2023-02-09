@@ -1,25 +1,30 @@
 import { PositionType, VelocityType, PlayerConstructor } from "./types";
-// import { this.context, canvasErrorString } from "./main";
 
 export class Player {
   context: CanvasRenderingContext2D;
+  madeTheFirstMove: boolean;
   openRate: number;
   position: PositionType;
   powerUpActive: boolean;
+  powerUpAboutToExpire: boolean;
   radians: number;
   radius: number;
   rotation: number;
+  timers: any[];
   velocity: VelocityType;
 
   constructor({ context, position, velocity }: PlayerConstructor) {
     this.openRate = 0.08;
+    this.madeTheFirstMove = false;
     this.position = position;
     this.velocity = velocity;
     this.radius = 15;
     this.radians = 0.75;
     this.rotation = 0;
     this.powerUpActive = false;
+    this.powerUpAboutToExpire = false;
     this.context = context;
+    this.timers = [];
   }
   draw() {
     this.context.save();
