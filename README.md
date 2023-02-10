@@ -20,7 +20,7 @@ A pretty simple pacman demo.
 
 ## Advanced
 
-1. [ ] Scared ghosts flash when expiring
+1. [x] Scared ghosts flash when expiring
 2. [x] Ghost sprites
 3. [ ] Ghosts spawn in cage
 4. [ ] Multiple lives
