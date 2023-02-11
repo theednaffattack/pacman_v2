@@ -1,9 +1,13 @@
 import { Boundary } from "./boundary-class";
 import { createImage } from "./create-image";
 import { Ghost } from "./ghost-class";
+import { levelOneMap } from "./level-maps";
+import { Coords } from "./types";
 
 const spriteURL = "./src/image/ghost_sprite.png";
 const sprite = createImage(spriteURL);
+
+type Tile = { col: number; row: number };
 
 export function retrieveGhosts(context: CanvasRenderingContext2D) {
   return [
@@ -56,4 +60,33 @@ export function retrieveGhosts(context: CanvasRenderingContext2D) {
       velocity: { x: Ghost.speed, y: 0 },
     }),
   ];
+}
+
+export function spawnGhosts(
+  context: CanvasRenderingContext2D,
+  opts: {
+    level: number;
+    speed: number;
+    velocity: number;
+    map: "levelOneMap" | "levelTwoMap" | "levelThreeMap";
+  }
+) {
+  const ghostNames = ["inky", "pinky", "blinky", "clyde"];
+  const levelMapNames = ["levelOneMap", "levelTwoMap", "levelThreeMap"];
+  const { map } = opts;
+  let availableTiles: Tile[][] = [];
+  let currentLevelMap: string[][];
+
+  for (let rowIndex = 0; rowIndex < levelOneMap.length; rowIndex++) {
+    // This is a row
+    availableTiles.push([]);
+    const row = levelOneMap[rowIndex];
+    for (let colIndex = 0; colIndex < row.length; colIndex++) {
+      const cell = row[colIndex];
+      if (cell === ".") {
+        availableTiles[rowIndex][colIndex] = { col: colIndex, row: rowIndex };
+      }
+    }
+  }
+  return availableTiles;
 }

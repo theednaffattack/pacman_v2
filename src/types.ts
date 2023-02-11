@@ -97,3 +97,7 @@ export type KeysRegisterType = {
     pressed: boolean;
   };
 };
+type XCoord = number;
+type YCoord = number;
+
+export type Coords = [XCoord, YCoord];

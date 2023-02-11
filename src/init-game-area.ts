@@ -1,6 +1,6 @@
 import { Boundary } from "./boundary-class";
 import { createImage } from "./create-image";
-import { levelOneMap } from "./level-maps";
+import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
 import type { InitType } from "./types";
@@ -12,7 +12,7 @@ export function initGameArea({
   pellets,
   powerUps,
 }: InitType) {
-  levelOneMap.forEach((row, rowIndex) => {
+  levelTwoMap.forEach((row, rowIndex) => {
     row.forEach((symbol, cellIndex) => {
       switch (symbol) {
         case "-":

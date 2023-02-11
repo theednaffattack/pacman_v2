@@ -1,9 +1,9 @@
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
-import { retrieveGhosts } from "./ghosts";
+import { retrieveGhosts, spawnGhosts } from "./ghosts";
 import { initGameArea } from "./init-game-area";
-import { levelOneMap } from "./level-maps";
+import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
@@ -32,7 +32,7 @@ if (!scoreElement) {
   throw new Error("Score element is undefined");
 }
 
-let paused = false;
+let paused = true;
 let pellets: Pellet[] = [];
 let boundaries: Boundary[] = [];
 let powerUps: PowerUp[] = [];
@@ -40,8 +40,15 @@ let animationId = 0;
 let score = 0;
 let lastKey: KeyType = "";
 let ghosts = retrieveGhosts(context);
+let spawnedGhosts = spawnGhosts(context, {
+  level: 1,
+  map: "levelOneMap",
+  speed: 2,
+  velocity: 2,
+});
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
-let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
+// let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
+let eatPelletSound = new Sound({ src: "./src/audio/waka.wav" });
 let eatGhostSound = new Sound({ src: "./src/audio/kill.mp3" });
 let eatPowerUpSound = new Sound({ src: "./src/audio/power_dot.wav" });
 let player = new Player({
@@ -56,9 +63,9 @@ let player = new Player({
 // TILE_SIZE is a square so width / height is the
 // same.
 // Set the width to the number of colums * tileSize
-canvas.width = levelOneMap[0].length * TILE_SIZE;
+canvas.width = levelTwoMap[0].length * TILE_SIZE;
 // Set the height to the number rows * tileSize
-canvas.height = levelOneMap.length * TILE_SIZE;
+canvas.height = levelTwoMap.length * TILE_SIZE;
 
 // BEG animation fn
 function animate() {
