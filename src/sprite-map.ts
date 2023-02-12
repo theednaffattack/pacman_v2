@@ -54,7 +54,7 @@ const obstacles: ObstacleType = {
   pipeCorner4: [8, 4] as const,
   block: [9, 5] as const,
   capLeft: [4, 4] as const,
-  capRight: [4, 5] as const,
+  capRight: [5, 4] as const,
   capBottom: [3, 4] as const,
   capTop: [8, 5] as const,
   pipeCross: [6, 5] as const,
@@ -62,6 +62,15 @@ const obstacles: ObstacleType = {
   pipeConnectorRight: [5, 5] as const,
   pipeConnectorBottom: [6, 3] as const,
   pipeConnectorLeft: [7, 3] as const,
+  pipeConnectorDownward: [6, 3] as const,
+  upperLeftHalfBlock: [9, 1] as const,
+  upperRighttHalfBlock: [8, 1] as const,
+  bottomLeftHalfBlock: [9, 2] as const,
+  bottomRightHalfBlock: [8, 2] as const,
+  topOnlyBar: [6, 2] as const,
+  bottomOnlyBar: [7, 2] as const,
+  leftOnlyBar: [4, 5] as const,
+  rightOnlyBar: [3, 5] as const,
 };
 
 export const spriteEntities = {

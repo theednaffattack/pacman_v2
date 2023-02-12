@@ -99,7 +99,7 @@ export type KeysRegisterType = {
 type XNum = number;
 type YNum = number;
 
-export type Coords = readonly [XNum, YNum];
+export type CoordsTuple = readonly [XNum, YNum];
 
 export type ObstacleType = {
   block: readonly [XNum, YNum];
@@ -111,6 +111,7 @@ export type ObstacleType = {
   pipeConnectorLeft: readonly [XNum, YNum];
   pipeConnectorRight: readonly [XNum, YNum];
   pipeConnectorTop: readonly [XNum, YNum];
+  pipeConnectorDownward: readonly [XNum, YNum];
   pipeHorizontal: readonly [XNum, YNum];
   pipeCorner1: readonly [XNum, YNum];
   pipeCorner2: readonly [XNum, YNum];
@@ -118,4 +119,12 @@ export type ObstacleType = {
   pipeCorner4: readonly [XNum, YNum];
   pipeCross: readonly [XNum, YNum];
   pipeVertical: readonly [XNum, YNum];
+  upperLeftHalfBlock: readonly [XNum, YNum];
+  upperRighttHalfBlock: readonly [XNum, YNum];
+  bottomLeftHalfBlock: readonly [XNum, YNum];
+  bottomRightHalfBlock: readonly [XNum, YNum];
+  topOnlyBar: readonly [XNum, YNum];
+  bottomOnlyBar: readonly [XNum, YNum];
+  leftOnlyBar: readonly [XNum, YNum];
+  rightOnlyBar: readonly [XNum, YNum];
 };
