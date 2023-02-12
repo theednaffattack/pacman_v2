@@ -1,5 +1,5 @@
 import { Ghost } from "./ghost-class";
-import type { SpriteGhostTypes } from "./types";
+import type { SpriteEntityTypes } from "./types";
 
 export function determineGhostState({
   blinking,
@@ -14,7 +14,7 @@ export function determineGhostState({
   eaten: boolean;
   ghost: Ghost;
   position: "top" | "right" | "bottom" | "left";
-  sprites: SpriteGhostTypes;
+  sprites: SpriteEntityTypes;
 }) {
   if (blinking) {
     ghost.scaredAboutToExpireTimer--;
