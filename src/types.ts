@@ -15,8 +15,7 @@ export type VelocityType = {
 export type BoundaryConstructor = {
   context: CanvasRenderingContext2D;
   position: PositionType;
-  image: HTMLImageElement;
-  color?: string;
+  spriteIndex: readonly [number, number];
 };
 
 export interface PlayerConstructor {
@@ -36,10 +35,10 @@ export interface GhostConstructor extends PlayerConstructor {
 }
 
 export type GhostSpriteIndexType = {
-  top: [number, number];
-  right: [number, number];
-  bottom: [number, number];
-  left: [number, number];
+  top: readonly [number, number];
+  right: readonly [number, number];
+  bottom: readonly [number, number];
+  left: readonly [number, number];
 };
 
 export type GhostNameType =
@@ -64,7 +63,7 @@ export type PlayerType = {
 
 export type CollisionType = "top" | "right" | "bottom" | "left";
 
-export type SpriteGhostTypes = {
+export type SpriteEntityTypes = {
   blinky: GhostSpriteIndexType;
   inky: GhostSpriteIndexType;
   pinky: GhostSpriteIndexType;
@@ -97,7 +96,26 @@ export type KeysRegisterType = {
     pressed: boolean;
   };
 };
-type XCoord = number;
-type YCoord = number;
+type XNum = number;
+type YNum = number;
 
-export type Coords = [XCoord, YCoord];
+export type Coords = readonly [XNum, YNum];
+
+export type ObstacleType = {
+  block: readonly [XNum, YNum];
+  capLeft: readonly [XNum, YNum];
+  capRight: readonly [XNum, YNum];
+  capBottom: readonly [XNum, YNum];
+  capTop: readonly [XNum, YNum];
+  pipeConnectorBottom: readonly [XNum, YNum];
+  pipeConnectorLeft: readonly [XNum, YNum];
+  pipeConnectorRight: readonly [XNum, YNum];
+  pipeConnectorTop: readonly [XNum, YNum];
+  pipeHorizontal: readonly [XNum, YNum];
+  pipeCorner1: readonly [XNum, YNum];
+  pipeCorner2: readonly [XNum, YNum];
+  pipeCorner3: readonly [XNum, YNum];
+  pipeCorner4: readonly [XNum, YNum];
+  pipeCross: readonly [XNum, YNum];
+  pipeVertical: readonly [XNum, YNum];
+};
