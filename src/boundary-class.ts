@@ -1,29 +1,40 @@
+import { TILE_SIZE } from "./constants";
+import { createImage } from "./create-image";
+import { spritePositionToImagePosition } from "./sprite-position-to-image-position";
 import { BoundaryConstructor } from "./types";
 
+const spriteURL = "./src/image/sprite_all_items.png";
+const sprite = createImage(spriteURL);
 export class Boundary {
   context: CanvasRenderingContext2D;
   position;
   width: number;
   height: number;
+  spriteIndex: [number, number];
   static cellWidth = 40;
   static cellHeight = 40;
-  image;
-  constructor({ context, position, image }: BoundaryConstructor) {
+  constructor({ context, position, spriteIndex }: BoundaryConstructor) {
     this.context = context;
     this.position = position;
     this.width = 40;
     this.height = 40;
-    this.image = image;
+    this.spriteIndex = spriteIndex;
   }
 
   draw() {
-    // I'm using a guard here to account for the
-    // context possibly being null. Ideally
-    // I'd have a custom error or function that
-    // introduces a visual error state to the game.
+    let [x, y] = this.spriteIndex;
+    let pixelCoords = spritePositionToImagePosition({ col: x, row: y });
 
-    // context.fillStyle = "blue";
-    // context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    this.context.drawImage(this.image, this.position.x, this.position.y);
+    this.context.drawImage(
+      sprite,
+      pixelCoords.x,
+      pixelCoords.y,
+      TILE_SIZE,
+      TILE_SIZE,
+      this.position.x,
+      this.position.y,
+      TILE_SIZE,
+      TILE_SIZE
+    );
   }
 }
