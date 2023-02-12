@@ -1,8 +1,8 @@
 import { determineGhostState } from "./determine-ghost-state";
 import { Ghost } from "./ghost-class";
 import { Player } from "./player-class";
-import { spritePositionToImagePosition } from "./spirte-position-to-image-position";
-import { sprites } from "./sprite-map";
+import { spritePositionToImagePosition } from "./sprite-position-to-image-position";
+import { spriteEntities } from "./sprite-map";
 
 export function spritePicker({
   ghost,
@@ -32,26 +32,26 @@ export function spritePicker({
   if (ghost.velocity.y < 0 && !player.powerUpActive) {
     // moving up
     spritePosition = spritePositionToImagePosition({
-      row: sprites[ghost.name].top[0],
-      col: sprites[ghost.name].top[1],
+      row: spriteEntities[ghost.name].top[0],
+      col: spriteEntities[ghost.name].top[1],
     });
   } else if (ghost.velocity.x > 0 && !player.powerUpActive) {
     // moving right
     spritePosition = spritePositionToImagePosition({
-      col: sprites[ghost.name].right[0],
-      row: sprites[ghost.name].right[1],
+      col: spriteEntities[ghost.name].right[0],
+      row: spriteEntities[ghost.name].right[1],
     });
   } else if (ghost.velocity.y > 0 && !player.powerUpActive) {
     // moving down
     spritePosition = spritePositionToImagePosition({
-      col: sprites[ghost.name].bottom[0],
-      row: sprites[ghost.name].bottom[1],
+      col: spriteEntities[ghost.name].bottom[0],
+      row: spriteEntities[ghost.name].bottom[1],
     });
   } else if (ghost.velocity.x < 0 && !player.powerUpActive) {
     // moving left
     spritePosition = spritePositionToImagePosition({
-      col: sprites[ghost.name].left[0],
-      row: sprites[ghost.name].left[1],
+      col: spriteEntities[ghost.name].left[0],
+      row: spriteEntities[ghost.name].left[1],
     });
   } else if (ghost.velocity.y < 0 && ghost.scared) {
     // moving up - SCARED
@@ -62,7 +62,7 @@ export function spritePicker({
         colOrRow: "col",
         eaten: ghost.eaten,
         position: "top",
-        sprites,
+        sprites: spriteEntities,
       }),
       // col: ghost.eaten ? sprites.eaten.top[0] : sprites.scared.top[0],
       row: determineGhostState({
@@ -71,7 +71,7 @@ export function spritePicker({
         colOrRow: "row",
         eaten: ghost.eaten,
         position: "top",
-        sprites,
+        sprites: spriteEntities,
       }),
     });
   } else if (ghost.velocity.x > 0) {
@@ -83,7 +83,7 @@ export function spritePicker({
         eaten: ghost.eaten,
         ghost,
         position: "right",
-        sprites,
+        sprites: spriteEntities,
       }),
       row: determineGhostState({
         blinking: player.powerUpAboutToExpire,
@@ -91,7 +91,7 @@ export function spritePicker({
         eaten: ghost.eaten,
         ghost,
         position: "right",
-        sprites,
+        sprites: spriteEntities,
       }),
     });
   } else if (ghost.velocity.y > 0) {
@@ -103,7 +103,7 @@ export function spritePicker({
         eaten: ghost.eaten,
         ghost,
         position: "bottom",
-        sprites,
+        sprites: spriteEntities,
       }),
       row: determineGhostState({
         blinking: ghost.scaredAboutToExpireTimer === 0, // player.powerUpAboutToExpire,
@@ -111,7 +111,7 @@ export function spritePicker({
         eaten: ghost.eaten,
         ghost,
         position: "bottom",
-        sprites,
+        sprites: spriteEntities,
       }),
     });
   } else if (ghost.velocity.x < 0) {
@@ -123,7 +123,7 @@ export function spritePicker({
         eaten: ghost.eaten,
         ghost,
         position: "left",
-        sprites,
+        sprites: spriteEntities,
       }),
       row: determineGhostState({
         blinking: player.powerUpAboutToExpire,
@@ -131,7 +131,7 @@ export function spritePicker({
         eaten: ghost.eaten,
         ghost,
         position: "left",
-        sprites,
+        sprites: spriteEntities,
       }),
     });
   }
