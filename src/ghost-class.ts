@@ -1,7 +1,7 @@
 import { SPRITE_HEIGHT, SPRITE_WIDTH } from "./constants";
 import { Player } from "./player-class";
-import { spritePositionToImagePosition } from "./spirte-position-to-image-position";
-import { sprites } from "./sprite-map";
+import { spritePositionToImagePosition } from "./sprite-position-to-image-position";
+import { spriteEntities } from "./sprite-map";
 import { spritePicker } from "./spritePicker";
 import type {
   CollisionType,
@@ -116,23 +116,23 @@ export class Ghost {
         let eyeDirection = { col: 0, row: 0 };
         if (this.velocity.y < 0) {
           eyeDirection = {
-            col: sprites.eaten.top[0],
-            row: sprites.eaten.top[1],
+            col: spriteEntities.eaten.top[0],
+            row: spriteEntities.eaten.top[1],
           };
         } else if (this.velocity.x > 0) {
           eyeDirection = {
-            col: sprites.eaten.right[0],
-            row: sprites.eaten.right[1],
+            col: spriteEntities.eaten.right[0],
+            row: spriteEntities.eaten.right[1],
           };
         } else if (this.velocity.y > 0) {
           eyeDirection = {
-            col: sprites.eaten.bottom[0],
-            row: sprites.eaten.bottom[1],
+            col: spriteEntities.eaten.bottom[0],
+            row: spriteEntities.eaten.bottom[1],
           };
         } else if (this.velocity.x < 0) {
           eyeDirection = {
-            col: sprites.eaten.left[0],
-            row: sprites.eaten.left[1],
+            col: spriteEntities.eaten.left[0],
+            row: spriteEntities.eaten.left[1],
           };
         }
 
