@@ -127,4 +127,5 @@ export type ObstacleType = {
   bottomOnlyBar: readonly [XNum, YNum];
   leftOnlyBar: readonly [XNum, YNum];
   rightOnlyBar: readonly [XNum, YNum];
+  ghostGate: readonly [XNum, YNum];
 };

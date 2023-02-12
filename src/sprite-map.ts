@@ -71,6 +71,7 @@ const obstacles: ObstacleType = {
   bottomOnlyBar: [7, 2] as const,
   leftOnlyBar: [4, 5] as const,
   rightOnlyBar: [3, 5] as const,
+  ghostGate: [2, 4] as const,
 };
 
 export const spriteEntities = {
