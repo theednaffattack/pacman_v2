@@ -371,7 +371,7 @@ export function initGameArea({
           break;
 
         // Bottom of the tile oriented boundary (a line)
-        case "bb":
+        case "gg":
           boundaries.push(
             new Boundary({
               context,
@@ -379,7 +379,7 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              spriteIndex: spriteEntities.bottomOnlyBar, // [9, 1],
+              spriteIndex: spriteEntities.ghostGate, // [9, 1],
             })
           );
           break;
