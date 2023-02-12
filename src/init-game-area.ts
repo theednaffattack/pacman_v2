@@ -1,5 +1,4 @@
 import { Boundary } from "./boundary-class";
-import { createImage } from "./create-image";
 import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
@@ -13,29 +12,32 @@ export function initGameArea({
   powerUps,
 }: InitType) {
   levelTwoMap.forEach((row, rowIndex) => {
-    row.forEach((symbol, cellIndex) => {
+    row.forEach((symbol, columnIndex) => {
       switch (symbol) {
+        // pipe horizontal
         case "-":
           boundaries.push(
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/pipeHorizontal.png"),
+              spriteIndex: [6, 4],
             })
           );
           break;
+
+        // pipe vertical
         case "|":
           boundaries.push(
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/pipeVertical.png"),
+              spriteIndex: [7, 5],
             })
           );
           break;
@@ -44,10 +46,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/pipeCorner1.png"),
+              // image: createImage("./src/image/pipeCorner1.png"),
+              spriteIndex: [9, 3],
             })
           );
           break;
@@ -56,10 +59,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/pipeCorner2.png"),
+              // image: createImage("./src/image/pipeCorner2.png"),
+              spriteIndex: [9, 4],
             })
           );
           break;
@@ -68,10 +72,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/pipeCorner3.png"),
+              // image: createImage("./src/image/pipeCorner3.png"),
+              spriteIndex: [7, 4],
             })
           );
           break;
@@ -80,10 +85,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/pipeCorner4.png"),
+              // image: createImage("./src/image/pipeCorner4.png"),
+              spriteIndex: [8, 4],
             })
           );
           break;
@@ -92,10 +98,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: Boundary.cellWidth * cellIndex,
+                x: Boundary.cellWidth * columnIndex,
                 y: Boundary.cellHeight * rowIndex,
               },
-              image: createImage("./src/image/block.png"),
+              // image: createImage("./src/image/block.png"),
+              spriteIndex: [9, 5],
             })
           );
           break;
@@ -104,10 +111,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              image: createImage("./src/image/capLeft.png"),
+              // image: createImage("./src/image/capLeft.png"),
+              spriteIndex: [4, 4],
             })
           );
           break;
@@ -116,10 +124,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              image: createImage("./src/image/capRight.png"),
+              // image: createImage("./src/image/capRight.png"),
+              spriteIndex: [4, 5],
             })
           );
           break;
@@ -128,10 +137,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              image: createImage("./src/image/capBottom.png"),
+              // image: createImage("./src/image/capBottom.png"),
+              spriteIndex: [3, 4],
             })
           );
           break;
@@ -140,10 +150,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              image: createImage("./src/image/capTop.png"),
+              // image: createImage("./src/image/capTop.png"),
+              spriteIndex: [8, 5],
             })
           );
           break;
@@ -152,10 +163,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              image: createImage("./src/image/pipeCross.png"),
+              // image: createImage("./src/image/pipeCross.png"),
+              spriteIndex: [6, 5],
             })
           );
           break;
@@ -164,11 +176,10 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              color: "blue",
-              image: createImage("./src/image/pipeConnectorTop.png"),
+              spriteIndex: [8, 3],
             })
           );
           break;
@@ -177,11 +188,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              color: "blue",
-              image: createImage("./src/image/pipeConnectorRight.png"),
+              // image: createImage("./src/image/pipeConnectorRight.png"),
+              spriteIndex: [5, 5],
             })
           );
           break;
@@ -190,11 +201,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              color: "blue",
-              image: createImage("./src/image/pipeConnectorBottom.png"),
+              // image: createImage("./src/image/pipeConnectorBottom.png"),
+              spriteIndex: [6, 3],
             })
           );
           break;
@@ -203,10 +214,11 @@ export function initGameArea({
             new Boundary({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth,
+                x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              image: createImage("./src/image/pipeConnectorLeft.png"),
+              // image: createImage("./src/image/pipeConnectorLeft.png"),
+              spriteIndex: [7, 3],
             })
           );
           break;
@@ -215,7 +227,7 @@ export function initGameArea({
             new Pellet({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
+                x: columnIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
                 y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
               },
             })
@@ -227,7 +239,7 @@ export function initGameArea({
             new PowerUp({
               context,
               position: {
-                x: cellIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
+                x: columnIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
                 y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
               },
             })
