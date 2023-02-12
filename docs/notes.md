@@ -27,3 +27,7 @@
 
 - Restart game [StackOverflow](https://stackoverflow.com/a/36869864)
 - Restart game cont [JS Fiddle example](https://jsfiddle.net/11wrorox/)
+- Pathfinding [Red Blog Games](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
+- Pathfinding A\* tutorial and visualization [SimonDev](https://www.youtube.com/watch?v=K8asVZmpek8)
+- A star library [Github](https://github.com/bgrins/javascript-astar)
+- A star code walk-thru [Simon Pfeiffer - Dev.to](https://dev.to/codesphere/pathfinding-with-javascript-the-a-algorithm-3jlb)
