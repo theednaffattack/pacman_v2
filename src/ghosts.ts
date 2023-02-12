@@ -2,9 +2,8 @@ import { Boundary } from "./boundary-class";
 import { createImage } from "./create-image";
 import { Ghost } from "./ghost-class";
 import { levelOneMap } from "./level-maps";
-import { Coords } from "./types";
 
-const spriteURL = "./src/image/ghost_sprite.png";
+const spriteURL = "./src/image/sprite_all_items.png";
 const sprite = createImage(spriteURL);
 
 type Tile = { col: number; row: number };
