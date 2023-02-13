@@ -4,6 +4,8 @@
 // F-Score: gScore + estimated distance to the goal
 // Heuristic = proceeding to a solution by trial and error or by rules that are only loosely defined.
 
+import { Boundary } from "./boundary-class";
+
 // BEG TYPES
 type GridNode = { x: number; y: number };
 // END TYPES
@@ -32,7 +34,7 @@ function heuristic(position0: GridNode, position1: GridNode) {
   return d1 + d2;
 }
 
-class GridPointClass {
+export type GridPointType = {
   x: number;
   y: number;
   fScore: number;
@@ -40,10 +42,24 @@ class GridPointClass {
   heuristic: number;
   neighbors: GridPointClass[];
   parent: GridPointClass | undefined;
+};
 
-  constructor(x: number, y: number) {
-    this.x = x; // x location (column) of the grid point
-    this.y = y; // y location (row) of the grid point
+export class GridPointClass {
+  xGrid: number;
+  yGrid: number;
+  xPixel: number;
+  yPixel: number;
+  fScore: number;
+  gScore: number;
+  heuristic: number;
+  neighbors: GridPointClass[];
+  parent: GridPointClass | undefined;
+
+  constructor({ xGrid: x, yGrid: y }: { xGrid: number; yGrid: number }) {
+    this.xGrid = x; // x location (column) of the grid point
+    this.yGrid = y; // y location (row) of the grid point
+    this.xPixel = this.xGrid * Boundary.cellWidth;
+    this.yPixel = this.yGrid * Boundary.cellHeight;
     this.fScore = 0; // total cost function
     this.gScore = 0; // cost function from start to the current grid point
     this.heuristic = 0; // heuristic estimated cost function from current grid point to the goal
@@ -53,8 +69,8 @@ class GridPointClass {
 
   // update neighbors array for a given grid point
   updateNeighbors(grid: GridPointClass[][]) {
-    let myX = this.x;
-    let myY = this.y;
+    let myX = this.xGrid;
+    let myY = this.yGrid;
 
     if (myX < columns - 1) {
       this.neighbors.push(grid[myX + 1][myY]);
@@ -80,7 +96,7 @@ function init({
   goal,
 }: {
   startCoords: GridPointClass;
-  goal: { x: number; y: number };
+  goal: GridPointClass;
   grid: GridPointClass[][];
 }) {
   // make a 2D array
@@ -90,7 +106,10 @@ function init({
 
   for (let colIndex = 0; colIndex < columns; colIndex++) {
     for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-      grid[colIndex][rowIndex] = new GridPointClass(colIndex, rowIndex);
+      grid[colIndex][rowIndex] = new GridPointClass({
+        xGrid: colIndex,
+        yGrid: rowIndex,
+      });
     }
   }
 

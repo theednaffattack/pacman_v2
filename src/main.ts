@@ -289,6 +289,7 @@ function animate() {
     }
     const collisions: CollisionType[] = [];
 
+    // Ghost movement
     boundaries.forEach((boundary) => {
       // Test if our ghost will collide to the top
       if (
