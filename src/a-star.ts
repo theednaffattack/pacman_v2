@@ -10,7 +10,7 @@ type GridNode = { x: number; y: number };
 
 let columns = 5;
 let rows = 5;
-let grid = new Array(columns);
+let grid: GridPointClass[][] = new Array(columns);
 
 // An array containing unevaluated grid points
 let openSet: GridPointClass[] = [];
@@ -75,7 +75,14 @@ class GridPointClass {
 }
 
 // Initializing the grid
-function init() {
+function init({
+  startCoords,
+  goal,
+}: {
+  startCoords: GridPointClass;
+  goal: { x: number; y: number };
+  grid: GridPointClass[][];
+}) {
   // make a 2D array
   for (let index = 0; index < columns; index++) {
     grid[index] = new Array(rows);
@@ -94,6 +101,7 @@ function init() {
   }
 
   start = grid[0][0];
+  start = startCoords;
   end = grid[columns - 1][rows - 1];
 
   openSet.push(start);
@@ -103,8 +111,17 @@ function init() {
 
 // A star search implementation
 // TODO: add params to implement in game
-export function search() {
-  init();
+// NOTE: ghost pen center = col = 12, row = 13
+// NOTE: For note above everything is zero based (row 13 becomes row 12)
+export function search({
+  start,
+  goal,
+}: {
+  start: GridPointClass;
+  goal: GridPointClass;
+  grid: GridPointClass[][];
+}) {
+  init({ startCoords: start, goal, grid });
 
   while (openSet.length > 0) {
     // assumption that the lowest index is the first one to begin with
