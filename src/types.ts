@@ -1,4 +1,5 @@
 import { Boundary } from "./boundary-class";
+import { GridPointClass } from "./grid-point-class";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
 
@@ -129,3 +130,23 @@ export type ObstacleType = {
   rightOnlyBar: readonly [XNum, YNum];
   ghostGate: readonly [XNum, YNum];
 };
+
+// BEG TYPES
+type GridNode = { x: number; y: number };
+
+export type SearchArgsType = {
+  start: GridPointClass;
+  goal: GridPointClass;
+  grid: GridPointClass[][];
+};
+
+export type GridPointType = {
+  x: number;
+  y: number;
+  fScore: number;
+  gScore: number;
+  heuristic: number;
+  neighbors: GridPointClass[];
+  parent: GridPointClass | undefined;
+};
+// END TYPES

@@ -1,4 +1,4 @@
-import { GridPointClass } from "./a-star";
+import { GridPointClass } from "./grid-point-class";
 
 export let levelOneMap = [
   ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],

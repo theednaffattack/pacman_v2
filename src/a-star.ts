@@ -4,15 +4,12 @@
 // F-Score: gScore + estimated distance to the goal
 // Heuristic = proceeding to a solution by trial and error or by rules that are only loosely defined.
 
-import { Boundary } from "./boundary-class";
+import { GridPointClass } from "./grid-point-class";
+import { SearchArgsType } from "./types";
 
-// BEG TYPES
-type GridNode = { x: number; y: number };
-// END TYPES
-
-let columns = 5;
-let rows = 5;
-let grid: GridPointClass[][] = new Array(columns);
+// let columns = 5;
+// let rows = 5;
+// let grid: GridPointClass[][] = new Array(columns);
 
 // An array containing unevaluated grid points
 let openSet: GridPointClass[] = [];
@@ -27,85 +24,28 @@ let path: GridPointClass[] = [];
 
 // The heuristic used is Manhattan distance
 //for other heuristics visit - https://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
-function heuristic(position0: GridNode, position1: GridNode) {
-  let d1 = Math.abs(position1.x - position0.x);
-  let d2 = Math.abs(position1.y - position0.y);
+function heuristic(position0: GridPointClass, position1: GridPointClass) {
+  let d1 = Math.abs(position1.xGrid - position0.xGrid);
+  let d2 = Math.abs(position1.yGrid - position0.yGrid);
 
   return d1 + d2;
-}
-
-export type GridPointType = {
-  x: number;
-  y: number;
-  fScore: number;
-  gScore: number;
-  heuristic: number;
-  neighbors: GridPointClass[];
-  parent: GridPointClass | undefined;
-};
-
-export class GridPointClass {
-  xGrid: number;
-  yGrid: number;
-  xPixel: number;
-  yPixel: number;
-  fScore: number;
-  gScore: number;
-  heuristic: number;
-  neighbors: GridPointClass[];
-  parent: GridPointClass | undefined;
-
-  constructor({ xGrid: x, yGrid: y }: { xGrid: number; yGrid: number }) {
-    this.xGrid = x; // x location (column) of the grid point
-    this.yGrid = y; // y location (row) of the grid point
-    this.xPixel = this.xGrid * Boundary.cellWidth;
-    this.yPixel = this.yGrid * Boundary.cellHeight;
-    this.fScore = 0; // total cost function
-    this.gScore = 0; // cost function from start to the current grid point
-    this.heuristic = 0; // heuristic estimated cost function from current grid point to the goal
-    this.neighbors = []; // neighbors of the current grid point
-    this.parent = undefined;
-  }
-
-  // update neighbors array for a given grid point
-  updateNeighbors(grid: GridPointClass[][]) {
-    let myX = this.xGrid;
-    let myY = this.yGrid;
-
-    if (myX < columns - 1) {
-      this.neighbors.push(grid[myX + 1][myY]);
-    }
-
-    if (myX > 0) {
-      this.neighbors.push(grid[myX - 1][myY]);
-    }
-
-    if (myY < rows - 1) {
-      this.neighbors.push(grid[myX][myY + 1]);
-    }
-
-    if (myY > 0) {
-      this.neighbors.push(grid[myX][myY - 1]);
-    }
-  }
 }
 
 // Initializing the grid
 function init({
   startCoords,
   goal,
+  grid,
 }: {
   startCoords: GridPointClass;
   goal: GridPointClass;
   grid: GridPointClass[][];
 }) {
-  // make a 2D array
-  for (let index = 0; index < columns; index++) {
-    grid[index] = new Array(rows);
-  }
+  let columnsLen = grid[0].length;
+  let rowsLen = grid.length;
 
-  for (let colIndex = 0; colIndex < columns; colIndex++) {
-    for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+  for (let colIndex = 0; colIndex < columnsLen; colIndex++) {
+    for (let rowIndex = 0; rowIndex < rowsLen; rowIndex++) {
       grid[colIndex][rowIndex] = new GridPointClass({
         xGrid: colIndex,
         yGrid: rowIndex,
@@ -113,15 +53,15 @@ function init({
     }
   }
 
-  for (let colIndex = 0; colIndex < columns; colIndex++) {
-    for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+  for (let colIndex = 0; colIndex < columnsLen; colIndex++) {
+    for (let rowIndex = 0; rowIndex < rowsLen; rowIndex++) {
       grid[colIndex][rowIndex].updateNeighbors(grid);
     }
   }
 
   start = grid[0][0];
   start = startCoords;
-  end = grid[columns - 1][rows - 1];
+  end = grid[columnsLen - 1][rowsLen - 1];
 
   openSet.push(start);
 
@@ -132,14 +72,7 @@ function init({
 // TODO: add params to implement in game
 // NOTE: ghost pen center = col = 12, row = 13
 // NOTE: For note above everything is zero based (row 13 becomes row 12)
-export function search({
-  start,
-  goal,
-}: {
-  start: GridPointClass;
-  goal: GridPointClass;
-  grid: GridPointClass[][];
-}) {
+export function search({ start, goal, grid }: SearchArgsType) {
   init({ startCoords: start, goal, grid });
 
   while (openSet.length > 0) {

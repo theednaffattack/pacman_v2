@@ -1,6 +1,6 @@
-import { GridPointClass } from "./a-star";
+import { GridPointClass } from "./grid-point-class";
 
-type TileSymbolType= "-" | "_"
+type TileSymbolType = "-" | "_";
 
 export function swapSymbolForGridNode({ map }: { map: string[][] }) {
   let newGridMap: GridPointClass[][] = [];
