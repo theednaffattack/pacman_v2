@@ -5,7 +5,7 @@
 // Heuristic = proceeding to a solution by trial and error or by rules that are only loosely defined.
 
 import { GridPointClass } from "./grid-point-class";
-import { SearchArgsType } from "./types";
+import { InitArgsType, SearchArgsType } from "./types";
 
 // let columns = 5;
 // let rows = 5;
@@ -32,15 +32,7 @@ function heuristic(position0: GridPointClass, position1: GridPointClass) {
 }
 
 // Initializing the grid
-function init({
-  startCoords,
-  goal,
-  grid,
-}: {
-  startCoords: GridPointClass;
-  goal: GridPointClass;
-  grid: GridPointClass[][];
-}) {
+function init({ startCoords, goal, grid }: InitArgsType) {
   let columnsLen = grid[0].length;
   let rowsLen = grid.length;
 
@@ -59,11 +51,12 @@ function init({
     }
   }
 
-  start = grid[0][0];
-  start = startCoords;
-  end = grid[columnsLen - 1][rowsLen - 1];
+  // Remove start and end to use as inputs "startCoords" & "goal"
+  // start = grid[0][0];
+  // start = startCoords;
+  // end = grid[columnsLen - 1][rowsLen - 1];
 
-  openSet.push(start);
+  openSet.push(startCoords);
 
   console.log(grid);
 }
@@ -84,7 +77,7 @@ export function search({ start, goal, grid }: SearchArgsType) {
       }
     }
     let currentGridPoint = openSet[lowestIndex];
-    if (currentGridPoint === end) {
+    if (currentGridPoint === goal) {
       let temp = currentGridPoint;
       path.push(temp);
       // while loop below
@@ -118,7 +111,7 @@ export function search({ start, goal, grid }: SearchArgsType) {
         }
 
         singleNeighbor.gScore = possibleGscore;
-        singleNeighbor.heuristic = heuristic(singleNeighbor, end);
+        singleNeighbor.heuristic = heuristic(singleNeighbor, goal);
         singleNeighbor.fScore =
           singleNeighbor.gScore + singleNeighbor.heuristic;
         singleNeighbor.parent = currentGridPoint;

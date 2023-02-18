@@ -150,3 +150,9 @@ export type GridPointType = {
   parent: GridPointClass | undefined;
 };
 // END TYPES
+
+export type InitArgsType = {
+  startCoords: GridPointClass;
+  goal: GridPointClass;
+  grid: GridPointClass[][];
+};
