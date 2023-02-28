@@ -2,6 +2,7 @@ import { Boundary } from "./boundary-class";
 import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
+import { spriteEntities } from "./sprite-map";
 import type { InitType } from "./types";
 
 // Additional cases
@@ -41,6 +42,8 @@ export function initGameArea({
             })
           );
           break;
+
+        // pipe corner 1 - upper left
         case "1":
           boundaries.push(
             new Boundary({
@@ -54,6 +57,8 @@ export function initGameArea({
             })
           );
           break;
+
+        // Pipe corner 2 - upper right
         case "2":
           boundaries.push(
             new Boundary({
@@ -67,6 +72,8 @@ export function initGameArea({
             })
           );
           break;
+
+        // Pipe corner 3 - bottom right
         case "3":
           boundaries.push(
             new Boundary({
@@ -80,6 +87,8 @@ export function initGameArea({
             })
           );
           break;
+
+        // Pipe corner 4 - bottom left
         case "4":
           boundaries.push(
             new Boundary({
@@ -93,6 +102,8 @@ export function initGameArea({
             })
           );
           break;
+
+        // Block - a one tile sized block
         case "b":
           boundaries.push(
             new Boundary({
@@ -106,6 +117,8 @@ export function initGameArea({
             })
           );
           break;
+
+        // Cap left - a cap for one tile sized open entities
         case "[":
           boundaries.push(
             new Boundary({
@@ -127,8 +140,7 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              // image: createImage("./src/image/capRight.png"),
-              spriteIndex: [4, 5],
+              spriteIndex: spriteEntities.capRight,
             })
           );
           break;
@@ -141,7 +153,7 @@ export function initGameArea({
                 y: rowIndex * Boundary.cellHeight,
               },
               // image: createImage("./src/image/capBottom.png"),
-              spriteIndex: [3, 4],
+              spriteIndex: spriteEntities.capBottom, // [3, 4],
             })
           );
           break;
@@ -167,7 +179,7 @@ export function initGameArea({
                 y: rowIndex * Boundary.cellHeight,
               },
               // image: createImage("./src/image/pipeCross.png"),
-              spriteIndex: [6, 5],
+              spriteIndex: spriteEntities.pipeCross, // [6, 5],
             })
           );
           break;
@@ -205,7 +217,7 @@ export function initGameArea({
                 y: rowIndex * Boundary.cellHeight,
               },
               // image: createImage("./src/image/pipeConnectorBottom.png"),
-              spriteIndex: [6, 3],
+              spriteIndex: spriteEntities.pipeConnectorBottom,
             })
           );
           break;
@@ -218,7 +230,7 @@ export function initGameArea({
                 y: rowIndex * Boundary.cellHeight,
               },
               // image: createImage("./src/image/pipeConnectorLeft.png"),
-              spriteIndex: [7, 3],
+              spriteIndex: spriteEntities.pipeConnectorLeft, //
             })
           );
           break;
@@ -242,6 +254,132 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth + Boundary.cellWidth / 2,
                 y: rowIndex * Boundary.cellHeight + Boundary.cellHeight / 2,
               },
+            })
+          );
+          break;
+
+        // Upper left corner boundary
+        case "ul":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.upperLeftHalfBlock, // [9, 1],
+            })
+          );
+          break;
+
+        // Upper right corner boundary
+        case "ur":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.upperRightHalfBlock, // [9, 1],
+            })
+          );
+          break;
+
+        // Bottom left corner boundary
+        case "bl":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.bottomLeftHalfBlock, // [9, 1],
+            })
+          );
+          break;
+
+        // Bottom right corner boundary
+        case "br":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.bottomRightHalfBlock, // [9, 1],
+            })
+          );
+          break;
+
+        // Top of the tile only boundary (a line)
+        case "to":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.topOnlyBar, // [9, 1],
+            })
+          );
+          break;
+
+        // Bottom of the tile oriented boundary (a line)
+        case "bo":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.bottomOnlyBar, // [9, 1],
+            })
+          );
+          break;
+
+        // Left of the tile oriented boundary (a line)
+        case "lo":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.leftOnlyBar, // [9, 1],
+            })
+          );
+          break;
+
+        // Right of the tile oriented boundary (a line)
+        case "ro":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.rightOnlyBar,
+            })
+          );
+          break;
+
+        // Bottom of the tile oriented boundary (a line)
+        case "gg":
+          boundaries.push(
+            new Boundary({
+              context,
+              position: {
+                x: columnIndex * Boundary.cellWidth,
+                y: rowIndex * Boundary.cellHeight,
+              },
+              spriteIndex: spriteEntities.ghostGate, // [9, 1],
             })
           );
           break;

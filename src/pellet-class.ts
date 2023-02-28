@@ -1,5 +1,4 @@
 import { PositionType } from "./types";
-import { context, canvasErrorString } from "./main";
 
 export class Pellet {
   context: CanvasRenderingContext2D;

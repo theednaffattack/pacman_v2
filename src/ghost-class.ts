@@ -110,8 +110,8 @@ export class Ghost {
       }
 
       // When ghosts are eaten and the power up is expiring
-      // When ghosts are eaten we care about
-      // which direction they're heading (eyeball direction)
+      // When ghosts are eaten we care about which
+      // direction they're heading (eyeball direction)
       if (this.eaten) {
         let eyeDirection = { col: 0, row: 0 };
         if (this.velocity.y < 0) {
