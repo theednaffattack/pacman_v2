@@ -5,6 +5,7 @@ import { BoundaryConstructor } from "./types";
 
 const spriteURL = "./src/image/sprite_all_items.png";
 const sprite = createImage(spriteURL);
+
 export class Boundary {
   context: CanvasRenderingContext2D;
   position;

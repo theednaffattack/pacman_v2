@@ -1,14 +1,17 @@
+import { search } from "./a-star";
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
-import { retrieveGhosts, spawnGhosts } from "./ghosts";
+import { retrieveGhosts } from "./ghosts";
+import { GridPointClass } from "./grid-point-class";
 import { initGameArea } from "./init-game-area";
-import { levelTwoMap } from "./level-maps";
+import { convertSymbolMapToGridNodeMap, levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
 import { Sound } from "./sound-class";
-import { CollisionType, KeysRegisterType, KeyType } from "./types";
+import { spriteEntities } from "./sprite-map";
+import type { CollisionType, KeysRegisterType, KeyType } from "./types";
 
 let keys: KeysRegisterType = {
   ArrowUp: { pressed: false },
@@ -39,13 +42,8 @@ let powerUps: PowerUp[] = [];
 let animationId = 0;
 let score = 0;
 let lastKey: KeyType = "";
-let ghosts = retrieveGhosts(context);
-let spawnedGhosts = spawnGhosts(context, {
-  level: 1,
-  map: "levelOneMap",
-  speed: 2,
-  velocity: 2,
-});
+let ghosts = retrieveGhosts({ context, map: "levelTwoMap" });
+
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
 // let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
 let eatPelletSound = new Sound({ src: "./src/audio/waka.wav" });
@@ -59,6 +57,15 @@ let player = new Player({
   },
   velocity: { x: 0, y: 0 },
 });
+
+const searchGrid = convertSymbolMapToGridNodeMap({ map: levelTwoMap });
+
+console.log("VIEW SEARCH GRID", searchGrid);
+
+const ghostPenGridPos = {
+  xGrid: 14,
+  yGrid: 12,
+};
 
 // TILE_SIZE is a square so width / height is the
 // same.
@@ -223,7 +230,26 @@ function animate() {
         score += 30;
         eatGhostSound.play();
       } else if (ghost.scared && ghost.eaten) {
-        // do nothing
+        // BEGIN A* (STAR)
+        // If the ghost is eaten then...
+        const ghostPenPath = search({
+          start: new GridPointClass({
+            context,
+            spriteIndex: spriteEntities[ghost.name].top,
+            xGrid: ghost.position.x, // + Boundary.cellWidth / 2,
+            yGrid: ghost.position.y, // + Boundary.cellHeight / 2,
+            spriteName: ghost.name,
+          }),
+          goal: new GridPointClass({
+            spriteIndex: [0, 0],
+            xGrid: ghostPenGridPos.xGrid,
+            yGrid: ghostPenGridPos.yGrid,
+            spriteName: "space",
+          }),
+          grid: searchGrid,
+        });
+
+        // END A STAR
       } else {
         loseGameSound.play();
         cancelAnimationFrame(animationId);
@@ -287,6 +313,7 @@ function animate() {
     if (!paused) {
       ghost.update(context, player);
     }
+
     const collisions: CollisionType[] = [];
 
     // Ghost movement
@@ -436,7 +463,7 @@ if (restartButton) {
     paused = true;
     ghosts = [];
     pellets = [];
-    ghosts = retrieveGhosts(context);
+    ghosts = retrieveGhosts({ context, map: "levelTwoMap" });
     player = new Player({
       context,
       position: {

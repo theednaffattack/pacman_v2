@@ -281,7 +281,7 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              spriteIndex: spriteEntities.upperRighttHalfBlock, // [9, 1],
+              spriteIndex: spriteEntities.upperRightHalfBlock, // [9, 1],
             })
           );
           break;

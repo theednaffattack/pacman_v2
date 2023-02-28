@@ -15,10 +15,10 @@ import { InitArgsType, SearchArgsType } from "./types";
 let openSet: GridPointClass[] = [];
 // An array containing completely evaluated grid points
 let closedSet: GridPointClass[] = [];
-// The starting grid point
-let start: GridPointClass;
-// Ending point grid point (goal)
-let end: GridPointClass;
+// // The starting grid point
+// let start: GridPointClass;
+// // Ending point grid point (goal)
+// let end: GridPointClass;
 // The path of connected Grid Points to the goal
 let path: GridPointClass[] = [];
 
@@ -32,24 +32,35 @@ function heuristic(position0: GridPointClass, position1: GridPointClass) {
 }
 
 // Initializing the grid
-function init({ startCoords, goal, grid }: InitArgsType) {
+function init({ startCoords, grid }: InitArgsType) {
   let columnsLen = grid[0].length;
   let rowsLen = grid.length;
 
-  for (let colIndex = 0; colIndex < columnsLen; colIndex++) {
-    for (let rowIndex = 0; rowIndex < rowsLen; rowIndex++) {
-      grid[colIndex][rowIndex] = new GridPointClass({
-        xGrid: colIndex,
-        yGrid: rowIndex,
-      });
-    }
-  }
+  // The grid is pre-formed now. Don't need this.
+  // for (let colIndex = 0; colIndex < columnsLen; colIndex++) {
+  //   for (let rowIndex = 0; rowIndex < rowsLen; rowIndex++) {
+  //     grid[colIndex][rowIndex] = new GridPointClass({
+  //       xGrid: colIndex,
+  //       yGrid: rowIndex,
+  //       spriteIndex: [0, 0],
+  //     });
+  //   }
+  // }
+  const updateCellNeighbors = grid.map((row, rowIndex) => {
+    row.map((cell, columnIndex) => {
+      cell.updateNeighbors(grid);
+    });
+  });
 
-  for (let colIndex = 0; colIndex < columnsLen; colIndex++) {
-    for (let rowIndex = 0; rowIndex < rowsLen; rowIndex++) {
-      grid[colIndex][rowIndex].updateNeighbors(grid);
-    }
-  }
+  console.log("VIEW DOUBLE MAP", grid);
+
+  // for (let rowIndex = 0; rowIndex < rowsLen; rowIndex++) {
+  //   for (let colIndex = 0; colIndex < columnsLen; colIndex++) {
+  //     console.log("WHAAAAT", { rowIndex, colIndex, rowsLen, columnsLen });
+
+  //     grid[rowIndex][colIndex].updateNeighbors(grid);
+  //   }
+  // }
 
   // Remove start and end to use as inputs "startCoords" & "goal"
   // start = grid[0][0];
@@ -57,8 +68,6 @@ function init({ startCoords, goal, grid }: InitArgsType) {
   // end = grid[columnsLen - 1][rowsLen - 1];
 
   openSet.push(startCoords);
-
-  console.log(grid);
 }
 
 // A star search implementation
@@ -80,12 +89,11 @@ export function search({ start, goal, grid }: SearchArgsType) {
     if (currentGridPoint === goal) {
       let temp = currentGridPoint;
       path.push(temp);
-      // while loop below
+
       while (temp.parent) {
         path.push(temp.parent);
         temp = temp.parent;
       }
-      console.log("DONE");
 
       // return the traced path
       return path.reverse();
