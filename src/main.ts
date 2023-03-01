@@ -35,6 +35,12 @@ if (!scoreElement) {
   throw new Error("Score element is undefined");
 }
 
+// Level two Ghost pen coordinates
+const ghostPenPos = {
+  x: 14,
+  y: 12,
+};
+
 let paused = true;
 let pellets: Pellet[] = [];
 let boundaries: Boundary[] = [];
@@ -57,15 +63,6 @@ let player = new Player({
   },
   velocity: { x: 0, y: 0 },
 });
-
-const searchGrid = convertSymbolMapToGridNodeMap({ map: levelTwoMap });
-
-console.log("VIEW SEARCH GRID", searchGrid);
-
-const ghostPenGridPos = {
-  xGrid: 14,
-  yGrid: 12,
-};
 
 // TILE_SIZE is a square so width / height is the
 // same.
