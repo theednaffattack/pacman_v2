@@ -5,7 +5,7 @@ import { TILE_SIZE } from "./constants";
 import { retrieveGhosts } from "./ghosts";
 import { GridPointClass } from "./grid-point-class";
 import { initGameArea } from "./init-game-area";
-import { convertSymbolMapToGridNodeMap, levelTwoMap } from "./level-maps";
+import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
