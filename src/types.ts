@@ -205,3 +205,8 @@ export type RetrieveGhostsArgsType = {
   context: CanvasRenderingContext2D;
   map: "levelOneMap" | "levelTwoMap" | "levelThreeMap";
 };
+
+export type ConvertSymbolMapToPathMatrixArgs = {
+  mapName: RetrieveGhostsArgsType["map"];
+  walkableValues?: MapTileSymbolType[];
+};
