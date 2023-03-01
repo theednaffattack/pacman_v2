@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview --host",
     "test": "jest",
-    "save-grid": "tsx ./src/scripts/save-maps-to-disk.ts"
+    "aStar": "tsx ./src/scripts/a-star-list-test.ts",
+    "path": "tsx ./src/scripts/pathfinding-test.ts"
   },
   "keywords": [],
   "author": "Eddie Naff",
@@ -16,7 +17,6 @@
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.4.0",
-    "fs-extra": "^11.1.0",
     "jest": "^29.4.1",
     "pathfinding": "^0.4.18",
     "ts-jest": "^29.0.5",
