@@ -3,7 +3,7 @@ import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
 import { retrieveGhosts } from "./ghosts";
-import { GridPointClass } from "./grid-point-class";
+import { handleGhosts } from "./handle-ghosts";
 import { initGameArea } from "./init-game-area";
 import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
@@ -305,129 +305,20 @@ function animate() {
     player.update();
   }
 
-  ghosts.forEach((ghost) => {
-    ghost.draw(context, player);
-    if (!paused) {
-      ghost.update(context, player);
-    }
-
-    const collisions: CollisionType[] = [];
-
-    // Ghost movement
-    boundaries.forEach((boundary) => {
-      // Test if our ghost will collide to the top
-      if (
-        !collisions.includes("top") &&
-        circleCollidesWithRectangle({
-          circle: {
-            ...ghost,
-            velocity: {
-              x: 0,
-              y: -ghost.speed,
-            },
-          },
-          rectangle: boundary,
-        })
-      ) {
-        collisions.push("top");
-      }
-      // Test if our ghost will collide to the right
-      if (
-        !collisions.includes("right") &&
-        circleCollidesWithRectangle({
-          circle: {
-            ...ghost,
-            velocity: {
-              x: ghost.speed,
-              y: 0,
-            },
-          },
-          rectangle: boundary,
-        })
-      ) {
-        collisions.push("right");
-      }
-
-      // Test if our ghost will collide to the bottom
-      if (
-        !collisions.includes("bottom") &&
-        circleCollidesWithRectangle({
-          circle: {
-            ...ghost,
-            velocity: {
-              x: 0,
-              y: ghost.speed,
-            },
-          },
-          rectangle: boundary,
-        })
-      ) {
-        collisions.push("bottom");
-      }
-
-      // Test if our ghost will collide to the left
-      if (
-        !collisions.includes("left") &&
-        circleCollidesWithRectangle({
-          circle: {
-            ...ghost,
-            velocity: {
-              x: -ghost.speed,
-              y: 0,
-            },
-          },
-          rectangle: boundary,
-        })
-      ) {
-        collisions.push("left");
-      }
+  // BEGIN HANDLE GHOSTS
+  handleGhosts({
+    boundaries,
+    context,
+    ghosts,
+    paused,
+    player,
+    mapHeight: levelTwoMap.length * TILE_SIZE,
+    mapWidth: levelTwoMap[0].length * TILE_SIZE,
     });
-    if (collisions.length > ghost.prevCollisions.length) {
-      ghost.prevCollisions = collisions;
-    }
+  // END HANDLE GHOSTS
 
-    if (JSON.stringify(collisions) !== JSON.stringify(ghost.prevCollisions)) {
-      if (ghost.velocity.y < 0) {
-        ghost.prevCollisions.push("top");
-      } else if (ghost.velocity.x > 0) {
-        ghost.prevCollisions.push("right");
-      } else if (ghost.velocity.y > 0) {
-        ghost.prevCollisions.push("bottom");
-      } else if (ghost.velocity.x < 0) {
-        ghost.prevCollisions.push("left");
-      }
-
-      const pathways = ghost.prevCollisions.filter((collision) => {
-        return !collisions.includes(collision);
-      });
-
-      const direction = pathways[Math.floor(Math.random() * pathways.length)];
-
-      switch (direction) {
-        case "top":
-          ghost.velocity.y = -ghost.speed;
-          ghost.velocity.x = 0;
-          break;
-
-        case "right":
-          ghost.velocity.y = 0;
-          ghost.velocity.x = ghost.speed;
-          break;
-
-        case "bottom":
-          ghost.velocity.y = ghost.speed;
-          ghost.velocity.x = 0;
-          break;
-
-        case "left":
-          ghost.velocity.y = 0;
-          ghost.velocity.x = -ghost.speed;
-          break;
-      }
-
-      ghost.prevCollisions = [];
-    }
-  });
+  // Rotate player depending on which direction
+  // the player is moving
   if (player.velocity.x > 0) {
     player.rotation = 0;
   } else if (player.velocity.x < 0) {
