@@ -7,7 +7,8 @@ import type {
   CollisionType,
   GhostConstructor,
   GhostNameType,
-  PositionType,
+  PathfinderResultType,
+  PixelPositionType,
   VelocityType,
 } from "./types";
 
@@ -15,9 +16,10 @@ export class Ghost {
   blinking: boolean;
   context: CanvasRenderingContext2D;
   eaten: boolean;
+  ghostPenPath: PathfinderResultType;
   image: HTMLImageElement;
   name: GhostNameType;
-  position: PositionType;
+  position: PixelPositionType;
   prevCollisions: CollisionType[];
   radius: number;
   scared: boolean;
@@ -41,6 +43,7 @@ export class Ghost {
     this.velocity = velocity;
     this.radius = SPRITE_WIDTH / 2;
     this.eaten = false;
+    this.ghostPenPath = [];
     this.scared = false;
     this.blinking = false;
     this.speed = speed;
@@ -87,8 +90,41 @@ export class Ghost {
     // The default normal ghost
     let obj = spritePicker({ ghost: this, player: pacman });
 
-    if (pacman.powerUpActive) {
+    if (pacman.powerUpActive && !this.eaten) {
       this.#setImageWhenPowerUpIsActive(ctx, pacman);
+    }
+
+    if (this.eaten) {
+      let eyeDirection = {
+        col: spriteEntities.eaten.right[0],
+        row: spriteEntities.eaten.right[1],
+      };
+      if (this.velocity.y < 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.top[0],
+          row: spriteEntities.eaten.top[1],
+        };
+      } else if (this.velocity.x > 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.right[0],
+          row: spriteEntities.eaten.right[1],
+        };
+      } else if (this.velocity.y > 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.bottom[0],
+          row: spriteEntities.eaten.bottom[1],
+        };
+      } else if (this.velocity.x < 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.left[0],
+          row: spriteEntities.eaten.left[1],
+        };
+      }
+
+      obj = spritePositionToImagePosition({
+        col: eyeDirection.col,
+        row: eyeDirection.row,
+      });
     }
 
     ctx.drawImage(

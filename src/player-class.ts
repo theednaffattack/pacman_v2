@@ -1,10 +1,10 @@
-import { PositionType, VelocityType, PlayerConstructor } from "./types";
+import { PixelPositionType, VelocityType, PlayerConstructor } from "./types";
 
 export class Player {
   context: CanvasRenderingContext2D;
   madeTheFirstMove: boolean;
   openRate: number;
-  position: PositionType;
+  position: PixelPositionType;
   powerUpActive: boolean;
   powerUpAboutToExpire: boolean;
   radians: number;
@@ -45,8 +45,16 @@ export class Player {
     this.context.closePath();
     this.context.restore();
   }
-  update() {
+  update(mapWidth: number) {
     this.draw();
+
+    // If player exits tunnel to the left
+    if (this.position.x < 0) {
+      this.position.x = mapWidth;
+    }
+    if (this.position.x > mapWidth) {
+      this.position.x = 0;
+    }
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
