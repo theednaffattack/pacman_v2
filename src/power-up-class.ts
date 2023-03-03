@@ -1,13 +1,13 @@
-import { PositionType } from "./types";
+import { PixelPositionType } from "./types";
 
 export class PowerUp {
   context: CanvasRenderingContext2D;
-  position: PositionType;
+  position: PixelPositionType;
   radius: number;
   constructor({
     context,
     position,
-  }: { position: PositionType } & { context: CanvasRenderingContext2D }) {
+  }: { position: PixelPositionType } & { context: CanvasRenderingContext2D }) {
     this.context = context;
     this.position = position;
     this.radius = 8;
