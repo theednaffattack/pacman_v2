@@ -10,15 +10,7 @@ import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
 import { Sound } from "./sound-class";
-import { spriteEntities } from "./sprite-map";
-import type { CollisionType, KeysRegisterType, KeyType } from "./types";
-
-let keys: KeysRegisterType = {
-  ArrowUp: { pressed: false },
-  ArrowDown: { pressed: false },
-  ArrowLeft: { pressed: false },
-  ArrowRight: { pressed: false },
-};
+import { Timer } from "./timer-class";
 
 const activeSec = 6;
 const expireWarningSec = 3;
@@ -63,6 +55,19 @@ let player = new Player({
   },
   velocity: { x: 0, y: 0 },
 });
+
+let powerDotTimer = new Timer(function () {
+  player.powerUpActive = false;
+  player.powerUpAboutToExpire = false;
+  ghosts.forEach((ghost) => {
+    ghost.scared = false;
+    ghost.eaten = false;
+  });
+}, 1000 * activeSec);
+
+let powerDotAboutToExpireTimer = new Timer(() => {
+  player.powerUpAboutToExpire = true;
+}, 1000 * expireWarningSec);
 
 // TILE_SIZE is a square so width / height is the
 // same.
