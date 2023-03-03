@@ -1,9 +1,13 @@
-import { search } from "./a-star";
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
 import { retrieveGhosts } from "./ghosts";
+import { handleCharacterMovement } from "./handle-character-movement";
 import { handleGhosts } from "./handle-ghosts";
+import { handleKeydown } from "./handle-keydown";
+import { handleKeyup } from "./handle-keyup";
+import { handlePellets } from "./handle-pellets";
+import { handlePowerUps } from "./handle-power-ups";
 import { initGameArea } from "./init-game-area";
 import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
@@ -11,6 +15,7 @@ import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
 import { Sound } from "./sound-class";
 import { Timer } from "./timer-class";
+import type { KeysRegisterType, KeyType } from "./types";
 
 const activeSec = 6;
 const expireWarningSec = 3;
@@ -27,19 +32,19 @@ if (!scoreElement) {
   throw new Error("Score element is undefined");
 }
 
-// Level two Ghost pen coordinates
-const ghostPenPos = {
-  x: 14,
-  y: 12,
+let keys: KeysRegisterType = {
+  ArrowUp: { pressed: false },
+  ArrowDown: { pressed: false },
+  ArrowLeft: { pressed: false },
+  ArrowRight: { pressed: false },
 };
-
 let paused = true;
 let pellets: Pellet[] = [];
 let boundaries: Boundary[] = [];
 let powerUps: PowerUp[] = [];
 let animationId = 0;
 let score = 0;
-let lastKey: KeyType = "";
+let lastKey: { value: KeyType } = { value: "" };
 let ghosts = retrieveGhosts({ context, map: "levelTwoMap" });
 
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
@@ -76,6 +81,9 @@ canvas.width = levelTwoMap[0].length * TILE_SIZE;
 // Set the height to the number rows * tileSize
 canvas.height = levelTwoMap.length * TILE_SIZE;
 
+const restartButton = document.getElementById("reset-button");
+const pauseButton = document.getElementById("pause-button");
+
 // BEG animation fn
 function animate() {
   if (!context) {
@@ -87,134 +95,21 @@ function animate() {
 
   animationId = requestAnimationFrame(animate);
 
-  // Character movement
-  if (keys.ArrowUp.pressed && lastKey === "ArrowUp") {
-    for (let i = 0; i < boundaries.length; i++) {
-      const boundary = boundaries[i];
-      if (
-        circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: 0, y: -5 } },
-          rectangle: boundary,
-        })
-      ) {
-        player.velocity.y = 0;
-        break;
-      } else {
-        player.velocity.y = -5;
-      }
-    }
-  } else if (keys.ArrowDown.pressed && lastKey === "ArrowDown") {
-    for (let i = 0; i < boundaries.length; i++) {
-      const boundary = boundaries[i];
-      if (
-        circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: 0, y: 5 } },
-          rectangle: boundary,
-        })
-      ) {
-        player.velocity.y = 0;
-        break;
-      } else {
-        player.velocity.y = 5;
-      }
-    }
-  } else if (keys.ArrowLeft.pressed && lastKey === "ArrowLeft") {
-    for (let i = 0; i < boundaries.length; i++) {
-      const boundary = boundaries[i];
-      if (
-        circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: -5, y: 0 } },
-          rectangle: boundary,
-        })
-      ) {
-        player.velocity.x = 0;
-        break;
-      } else {
-        player.velocity.x = -5;
-      }
-    }
-  } else if (keys.ArrowRight.pressed && lastKey === "ArrowRight") {
-    for (let i = 0; i < boundaries.length; i++) {
-      const boundary = boundaries[i];
-      if (
-        circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: 5, y: 0 } },
-          rectangle: boundary,
-        })
-      ) {
-        player.velocity.x = 0;
-        break;
-      } else {
-        player.velocity.x = 5;
-      }
-    }
-  }
+  // BEGIN Character movement
+  handleCharacterMovement({ keys, boundaries, lastKey, player });
+  // END Character movement
 
   // Draw powerUps Detect power ups collison
-  for (
-    let powerUpIndex = powerUps.length - 1;
-    0 <= powerUpIndex;
-    powerUpIndex--
-  ) {
-    const powerUp = powerUps[powerUpIndex];
-    powerUp.draw();
-
-    // Player collides with power up eat powerup
-    if (
-      Math.hypot(
-        powerUp.position.x - player.position.x,
-        powerUp.position.y - player.position.y
-      ) <
-      powerUp.radius + player.radius
-    ) {
-      powerUps.splice(powerUpIndex, 1);
-      player.powerUpActive = true;
-      player.powerUpAboutToExpire = false;
-      eatPowerUpSound.play();
-
-      // If we already have active timers we
-      // need to clear them before setting new ones.
-      player.timers.forEach((timer) => {
-        clearTimeout(timer);
-      });
-
-      // Now clear out the timers array
-      player.timers = [];
-
-      // Create timers for powered up state
-      let powerDotTimer = setTimeout(() => {
-        player.powerUpActive = false;
-        player.powerUpAboutToExpire = false;
-        ghosts.forEach((ghost) => {
-          ghost.scared = false;
-          ghost.eaten = false;
-        });
-      }, 1000 * activeSec);
-
-      player.timers.push(powerDotTimer);
-
-      let powerDotAboutToExpireTimer = setTimeout(() => {
-        player.powerUpAboutToExpire = true;
-      }, 1000 * expireWarningSec);
-
-      player.timers.push(powerDotAboutToExpireTimer);
-
-      ghosts.forEach((ghost) => {
-        if (player.powerUpActive) {
-          ghost.scared = true;
-        } else {
-          ghost.scared = false;
-        }
-      });
-      score += 20;
-      if (!scoreElement) {
-        console.error("Score element is missing!");
-        return;
-      } else {
-        scoreElement.innerHTML = score.toString();
-      }
-    }
-  }
+  handlePowerUps({
+    player,
+    powerUps,
+    eatPowerUpSound,
+    ghosts,
+    powerDotAboutToExpireTimer,
+    powerDotTimer,
+    score,
+    scoreElement,
+  });
 
   // Lose game scenario (ghost & player collision)
   for (let ghostIndex = ghosts.length - 1; 0 <= ghostIndex; ghostIndex--) {
@@ -232,26 +127,7 @@ function animate() {
         score += 30;
         eatGhostSound.play();
       } else if (ghost.scared && ghost.eaten) {
-        // BEGIN A* (STAR)
-        // If the ghost is eaten then...
-        const ghostPenPath = search({
-          start: new GridPointClass({
-            context,
-            spriteIndex: spriteEntities[ghost.name].top,
-            xGrid: ghost.position.x, // + Boundary.cellWidth / 2,
-            yGrid: ghost.position.y, // + Boundary.cellHeight / 2,
-            spriteName: ghost.name,
-          }),
-          goal: new GridPointClass({
-            spriteIndex: [0, 0],
-            xGrid: ghostPenGridPos.xGrid,
-            yGrid: ghostPenGridPos.yGrid,
-            spriteName: "space",
-          }),
-          grid: searchGrid,
-        });
-
-        // END A STAR
+        // DO NOTHING
       } else {
         loseGameSound.play();
         cancelAnimationFrame(animationId);
@@ -268,31 +144,7 @@ function animate() {
   }
 
   // Draw pellets Detect player / pellet collision (eat pellet)
-  for (let pelletIndex = pellets.length - 1; 0 <= pelletIndex; pelletIndex--) {
-    const pellet = pellets[pelletIndex];
-
-    pellet.draw();
-
-    if (
-      Math.hypot(
-        pellet.position.x - player.position.x,
-        pellet.position.y - player.position.y
-      ) <
-      pellet.radius + player.radius
-    ) {
-      pellets.splice(pelletIndex, 1);
-      score += 10;
-      if (player.madeTheFirstMove) {
-        eatPelletSound.play();
-      }
-      if (!scoreElement) {
-        console.error("Score element is missing!");
-        return;
-      } else {
-        scoreElement.innerHTML = score.toString();
-      }
-    }
-  }
+  handlePellets({ eatPelletSound, pellets, player, score, scoreElement });
 
   // Detect player / boundary collision
   boundaries.forEach((boundary) => {
@@ -307,7 +159,7 @@ function animate() {
   player.draw();
 
   if (!paused) {
-    player.update();
+    player.update(levelTwoMap[0].length * TILE_SIZE);
   }
 
   // BEGIN HANDLE GHOSTS
@@ -319,7 +171,7 @@ function animate() {
     player,
     mapHeight: levelTwoMap.length * TILE_SIZE,
     mapWidth: levelTwoMap[0].length * TILE_SIZE,
-    });
+  });
   // END HANDLE GHOSTS
 
   // Rotate player depending on which direction
@@ -348,12 +200,11 @@ initGameArea({
 animate();
 
 // Event Listeners
-const restartButton = document.getElementById("reset-button");
 
 if (restartButton) {
   restartButton.addEventListener("click", () => {
     // Add restart logic here
-    paused = true;
+
     ghosts = [];
     pellets = [];
     ghosts = retrieveGhosts({ context, map: "levelTwoMap" });
@@ -378,21 +229,31 @@ if (restartButton) {
     });
 
     // Prepare to restart by resetting 'pause' info
-    paused = false;
+    paused = true;
+    score = 0;
+
+    if (pauseButton) {
+      if (paused) {
+        pauseButton.innerHTML = "resume";
+      }
+      if (!paused) {
+        pauseButton.innerHTML = "pause";
+      }
+    }
 
     // Finally, animate (restart)
     animate();
   });
 }
 
-const pauseButton = document.getElementById("pause-button");
-
 if (pauseButton) {
   pauseButton.addEventListener("click", () => {
     if (!paused) {
+      powerDotTimer.resume();
       pauseButton.innerHTML = "resume";
       paused = true;
     } else if (paused) {
+      powerDotTimer.pause();
       pauseButton.innerHTML = "pause";
       paused = false;
     }
@@ -400,58 +261,9 @@ if (pauseButton) {
 }
 
 addEventListener("keydown", ({ key }) => {
-  switch (key) {
-    case "ArrowUp":
-      if (!player.madeTheFirstMove) {
-        player.madeTheFirstMove = true;
-      }
-      keys.ArrowUp.pressed = true;
-      lastKey = "ArrowUp";
-      break;
-    case "ArrowDown":
-      if (!player.madeTheFirstMove) {
-        player.madeTheFirstMove = true;
-      }
-      keys.ArrowDown.pressed = true;
-      lastKey = "ArrowDown";
-      break;
-    case "ArrowLeft":
-      if (!player.madeTheFirstMove) {
-        player.madeTheFirstMove = true;
-      }
-      keys.ArrowLeft.pressed = true;
-      lastKey = "ArrowLeft";
-
-      break;
-    case "ArrowRight":
-      keys.ArrowRight.pressed = true;
-      lastKey = "ArrowRight";
-      break;
-    default:
-      break;
-  }
+  handleKeydown({ key, keys, lastKey, player });
 });
 
 addEventListener("keyup", ({ key }) => {
-  switch (key) {
-    case "ArrowUp":
-      keys.ArrowUp.pressed = false;
-      break;
-
-    case "ArrowDown":
-      keys.ArrowDown.pressed = false;
-      break;
-
-    case "ArrowLeft":
-      keys.ArrowLeft.pressed = false;
-      break;
-
-    case "ArrowRight":
-      keys.ArrowRight.pressed = false;
-
-      break;
-
-    default:
-      break;
-  }
+  handleKeyup({ key, keys });
 });
