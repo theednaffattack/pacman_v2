@@ -56,8 +56,29 @@ export class Ghost {
     this.#setImage(ctx, pacman);
   }
 
-  update(ctx: CanvasRenderingContext2D, pacman: Player) {
+  update(
+    ctx: CanvasRenderingContext2D,
+    pacman: Player,
+    mapHeight: number,
+    mapWidth: number
+  ) {
     this.draw(ctx, pacman);
+    // If ghost exits tunnel to the left
+    if (this.position.x < 0) {
+      this.position.x = mapWidth;
+    }
+    // If ghost exits tunnel to the right
+    if (this.position.x > mapWidth) {
+      this.position.x = 0;
+    }
+    // If ghost exits tunnel to the top
+    if (this.position.y < 0) {
+      this.position.y = mapHeight;
+    }
+    // If ghost exits tunnel to the bottom
+    if (this.position.y > mapHeight) {
+      this.position.y = 0;
+    }
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
