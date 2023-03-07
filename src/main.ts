@@ -14,10 +14,9 @@ import { Pellet } from "./pellet-class";
 import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
 import { Sound } from "./sound-class";
-import { Timer } from "./timer-class";
 import type { KeysRegisterType, KeyType } from "./types";
 
-const activeSec = 6;
+const activeSec = 10;
 const expireWarningSec = 3;
 
 export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
@@ -41,9 +40,10 @@ let keys: KeysRegisterType = {
 let paused = true;
 let pellets: Pellet[] = [];
 let boundaries: Boundary[] = [];
+let gates: Boundary[] = [];
 let powerUps: PowerUp[] = [];
 let animationId = 0;
-let score = 0;
+let config = { score: 0 };
 let lastKey: { value: KeyType } = { value: "" };
 let ghosts = retrieveGhosts({ context, map: "levelTwoMap" });
 
@@ -61,16 +61,33 @@ let player = new Player({
   velocity: { x: 0, y: 0 },
 });
 
-let powerDotTimer = new Timer(function () {
+// let powerDotTimer = new Timer(function () {
+//   player.powerUpActive = false;
+//   player.powerUpAboutToExpire = false;
+//   ghosts.forEach((ghost) => {
+//     ghost.blinking = false;
+//     ghost.scared = false;
+//     ghost.eaten = false;
+//   });
+//   console.log("TIMER!!!");
+// }, 1000 * activeSec);
+
+let powerDotTimer = setTimeout(() => {
   player.powerUpActive = false;
   player.powerUpAboutToExpire = false;
   ghosts.forEach((ghost) => {
+    ghost.blinking = false;
     ghost.scared = false;
-    ghost.eaten = false;
+    // ghost.eaten = false;
   });
+  console.log("TIMER!!!", 1000 * activeSec);
 }, 1000 * activeSec);
 
-let powerDotAboutToExpireTimer = new Timer(() => {
+// let powerDotAboutToExpireTimer = new Timer(() => {
+//   player.powerUpAboutToExpire = true;
+// }, 1000 * expireWarningSec);
+
+let powerDotAboutToExpireTimer = setTimeout(() => {
   player.powerUpAboutToExpire = true;
 }, 1000 * expireWarningSec);
 
@@ -96,7 +113,7 @@ function animate() {
   animationId = requestAnimationFrame(animate);
 
   // BEGIN Character movement
-  handleCharacterMovement({ keys, boundaries, lastKey, player });
+  handleCharacterMovement({ keys, gates, boundaries, lastKey, player });
   // END Character movement
 
   // Draw powerUps Detect power ups collison
@@ -107,7 +124,7 @@ function animate() {
     ghosts,
     powerDotAboutToExpireTimer,
     powerDotTimer,
-    score,
+    config,
     scoreElement,
   });
 
@@ -124,7 +141,7 @@ function animate() {
       // Eat ghost scenario
       if (ghost.scared && !ghost.eaten) {
         ghost.eaten = true;
-        score += 30;
+        config.score += 30;
         eatGhostSound.play();
       } else if (ghost.scared && ghost.eaten) {
         // DO NOTHING
@@ -144,7 +161,13 @@ function animate() {
   }
 
   // Draw pellets Detect player / pellet collision (eat pellet)
-  handlePellets({ eatPelletSound, pellets, player, score, scoreElement });
+  handlePellets({
+    eatPelletSound,
+    pellets,
+    player,
+    config,
+    scoreElement,
+  });
 
   // Detect player / boundary collision
   boundaries.forEach((boundary) => {
@@ -156,6 +179,10 @@ function animate() {
     }
   });
 
+  gates.forEach((gate) => {
+    gate.draw();
+  });
+
   player.draw();
 
   if (!paused) {
@@ -164,8 +191,11 @@ function animate() {
 
   // BEGIN HANDLE GHOSTS
   handleGhosts({
+    animationId,
     boundaries,
+    // cancelAnimationFrame,
     context,
+    gates,
     ghosts,
     paused,
     player,
@@ -193,6 +223,7 @@ function animate() {
 initGameArea({
   boundaries,
   context,
+  gates,
   pellets,
   powerUps,
 });
@@ -224,13 +255,14 @@ if (restartButton) {
     initGameArea({
       boundaries,
       context,
+      gates,
       pellets,
       powerUps,
     });
 
     // Prepare to restart by resetting 'pause' info
     paused = true;
-    score = 0;
+    config.score = 0;
 
     if (pauseButton) {
       if (paused) {
@@ -249,11 +281,11 @@ if (restartButton) {
 if (pauseButton) {
   pauseButton.addEventListener("click", () => {
     if (!paused) {
-      powerDotTimer.resume();
+      // powerDotTimer.resume();
       pauseButton.innerHTML = "resume";
       paused = true;
     } else if (paused) {
-      powerDotTimer.pause();
+      // powerDotTimer.pause();
       pauseButton.innerHTML = "pause";
       paused = false;
     }
