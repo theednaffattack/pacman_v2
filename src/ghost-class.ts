@@ -1,4 +1,4 @@
-import { SPRITE_HEIGHT, SPRITE_WIDTH } from "./constants";
+import { SPRITE_HEIGHT, SPRITE_WIDTH, TILE_SIZE } from "./constants";
 import { Player } from "./player-class";
 import { spritePositionToImagePosition } from "./sprite-position-to-image-position";
 import { spriteEntities } from "./sprite-map";
@@ -12,11 +12,32 @@ import type {
   VelocityType,
 } from "./types";
 
-export class Ghost {
+export interface GhostLike {
   blinking: boolean;
   context: CanvasRenderingContext2D;
   eaten: boolean;
   ghostPenPath: PathfinderResultType;
+  ghostPenPathIndex: number;
+  image: HTMLImageElement;
+  name: GhostNameType;
+  position: PixelPositionType;
+  prevCollisions: CollisionType[];
+  radius: number;
+  scared: boolean;
+  scaredAboutToExpireTimer: number;
+  scaredAboutToExpireTimerDefault: number;
+  spriteIndex: [number, number];
+  speed: number;
+  velocity: VelocityType;
+}
+
+export class Ghost {
+  blinking: boolean;
+  context: CanvasRenderingContext2D;
+  eaten: boolean;
+  /** An array of tuples of type [number, number] */
+  ghostPenPath: PathfinderResultType;
+  ghostPenPathIndex: number;
   image: HTMLImageElement;
   name: GhostNameType;
   position: PixelPositionType;
@@ -44,6 +65,7 @@ export class Ghost {
     this.radius = SPRITE_WIDTH / 2;
     this.eaten = false;
     this.ghostPenPath = [];
+    this.ghostPenPathIndex = 0;
     this.scared = false;
     this.blinking = false;
     this.speed = speed;
