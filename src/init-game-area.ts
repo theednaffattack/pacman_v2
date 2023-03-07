@@ -1,4 +1,5 @@
 import { Boundary } from "./boundary-class";
+import { Gates } from "./gates-class";
 import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
@@ -9,6 +10,7 @@ import type { InitType } from "./types";
 export function initGameArea({
   boundaries,
   context,
+  gates,
   pellets,
   powerUps,
 }: InitType) {
@@ -281,7 +283,7 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              spriteIndex: spriteEntities.upperRightHalfBlock, // [9, 1],
+              spriteIndex: spriteEntities.upperRightHalfBlock, // [8, 1],
             })
           );
           break;
@@ -295,7 +297,7 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              spriteIndex: spriteEntities.bottomLeftHalfBlock, // [9, 1],
+              spriteIndex: spriteEntities.bottomLeftHalfBlock, // [9, 2],
             })
           );
           break;
@@ -309,7 +311,7 @@ export function initGameArea({
                 x: columnIndex * Boundary.cellWidth,
                 y: rowIndex * Boundary.cellHeight,
               },
-              spriteIndex: spriteEntities.bottomRightHalfBlock, // [9, 1],
+              spriteIndex: spriteEntities.bottomRightHalfBlock, // [8, 2],
             })
           );
           break;
@@ -372,8 +374,8 @@ export function initGameArea({
 
         // Bottom of the tile oriented boundary (a line)
         case "gg":
-          boundaries.push(
-            new Boundary({
+          gates.push(
+            new Gates({
               context,
               position: {
                 x: columnIndex * Boundary.cellWidth,
