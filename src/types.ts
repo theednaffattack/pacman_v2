@@ -1,4 +1,5 @@
 import { Boundary } from "./boundary-class";
+import { Gates } from "./gates-class";
 import { GridPointClass } from "./grid-point-class";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
@@ -86,6 +87,7 @@ export type LastKeyType = {
 export type InitType = {
   boundaries: Boundary[];
   context: CanvasRenderingContext2D;
+  gates: Gates[];
   pellets: Pellet[];
   powerUps: PowerUp[];
 };
