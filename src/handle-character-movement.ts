@@ -1,21 +1,26 @@
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
+import { Gates } from "./gates-class";
 import { Player } from "./player-class";
-import { KeysRegisterType, KeyType, LastKeyType } from "./types";
+import { KeysRegisterType, LastKeyType } from "./types";
 
 type HandleCharacterMovementArgsType = {
-  keys: KeysRegisterType;
   boundaries: Boundary[];
+  gates: Gates[];
+  keys: KeysRegisterType;
   lastKey: LastKeyType;
   player: Player;
 };
 
 export function handleCharacterMovement({
   keys,
-  boundaries,
+  boundaries: originalBoundaries,
+  gates,
   lastKey,
   player,
 }: HandleCharacterMovementArgsType) {
+  const boundaries = [...originalBoundaries, ...gates];
+
   if (keys.ArrowUp.pressed && lastKey.value === "ArrowUp") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
