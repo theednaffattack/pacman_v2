@@ -6,7 +6,7 @@ type HandlePelletsArgsType = {
   eatPelletSound: Sound;
   pellets: Pellet[];
   player: Player;
-  score: number;
+  config: { score: number };
   scoreElement: HTMLElement | null;
 };
 
@@ -14,7 +14,7 @@ export function handlePellets({
   eatPelletSound,
   pellets,
   player,
-  score,
+  config,
   scoreElement,
 }: HandlePelletsArgsType) {
   for (let pelletIndex = pellets.length - 1; 0 <= pelletIndex; pelletIndex--) {
@@ -30,7 +30,7 @@ export function handlePellets({
       pellet.radius + player.radius
     ) {
       pellets.splice(pelletIndex, 1);
-      score += 10;
+      config.score += 10;
       if (player.madeTheFirstMove) {
         eatPelletSound.play();
       }
@@ -38,7 +38,7 @@ export function handlePellets({
         console.error("Score element is missing!");
         return;
       } else {
-        scoreElement.innerHTML = score.toString();
+        scoreElement.innerHTML = config.score.toString();
       }
     }
   }

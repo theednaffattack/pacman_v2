@@ -1,16 +1,15 @@
 import { Ghost } from "./ghost-class";
 import { Player } from "./player-class";
 import { Sound } from "./sound-class";
-import { Timer } from "./timer-class";
 
 type HandlePowerUpsArgsType = {
   eatPowerUpSound: Sound;
   ghosts: Ghost[];
   powerUps: any[];
   player: Player;
-  powerDotTimer: Timer;
-  powerDotAboutToExpireTimer: Timer;
-  score: number;
+  powerDotTimer: any;
+  powerDotAboutToExpireTimer: any;
+  config: { score: number };
   scoreElement: HTMLElement | null;
 };
 
@@ -21,7 +20,7 @@ export function handlePowerUps({
   powerDotAboutToExpireTimer,
   powerDotTimer,
   powerUps,
-  score,
+  config,
   scoreElement,
 }: HandlePowerUpsArgsType) {
   for (
@@ -65,12 +64,12 @@ export function handlePowerUps({
           ghost.scared = false;
         }
       });
-      score += 20;
+      config.score += 20;
       if (!scoreElement) {
         console.error("Score element is missing!");
         return;
       } else {
-        scoreElement.innerHTML = score.toString();
+        scoreElement.innerHTML = config.score.toString();
       }
     }
   }
