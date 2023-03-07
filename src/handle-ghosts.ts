@@ -1,16 +1,18 @@
 import PF from "pathfinding";
-import { convertSymbolMapToPathMatrix } from "./convert-symbol-map-to-path-matrix";
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
+import { convertSymbolMapToPathMatrix } from "./convert-symbol-map-to-path-matrix";
 import { Ghost } from "./ghost-class";
 import { Player } from "./player-class";
 import { CollisionType, PathfinderResultType } from "./types";
 
 // BEGIN types
 type HandleGhostsArgsType = {
+  animationId: number;
   boundaries: Boundary[];
   context: CanvasRenderingContext2D;
+  gates: Boundary[];
   ghosts: Ghost[];
   paused: boolean;
   mapHeight: number;
@@ -18,34 +20,23 @@ type HandleGhostsArgsType = {
   player: Player;
 };
 
-type GhostEatenPathsType = {
-  inky: any[];
-  pinky: any[];
-  blinky: any[];
-  clyde: any[];
-};
 // END types
 
 export function handleGhosts({
+  animationId,
   boundaries,
   context,
+  gates,
   ghosts,
   paused,
   mapHeight,
   mapWidth,
   player,
 }: HandleGhostsArgsType) {
-  let ghostEatenPaths: GhostEatenPathsType = {
-    inky: [],
-    pinky: [],
-    blinky: [],
-    clyde: [],
-  };
-
   // Level two Ghost pen coordinates
   const ghostPenPos = {
     x: 13,
-    y: 12,
+    y: 13,
   };
 
   const matrix = convertSymbolMapToPathMatrix({ mapName: "levelTwoMap" });
@@ -186,6 +177,7 @@ export function handleGhosts({
     if (ghost.eaten && ghost.ghostPenPath.length === 0) {
       ghost.velocity.x = 0;
       ghost.velocity.y = 0;
+
       // Convert pixel position to grid position
       const xGrid = Math.floor(ghost.position.x / TILE_SIZE);
       const yGrid = Math.floor(ghost.position.y / TILE_SIZE);
@@ -204,75 +196,79 @@ export function handleGhosts({
 
       // Set the ghost's return path to the
       // ghost pen
-      ghostEatenPaths[ghost.name] = path;
+      // ghostEatenPaths[ghost.name] = path;
       ghost.ghostPenPath = path;
-
-      console.log(
-        "VIEW GHOST INFO",
-        ghost.name.toUpperCase(),
-        ghost.ghostPenPath
-      );
 
       // END A STAR
     }
     // Make eaten ghosts move to the pen
     if (ghost.eaten && ghost.ghostPenPath.length > 0) {
-      const from = ghost.ghostPenPath[0];
-      const to = ghost.ghostPenPath[1];
+      // cancelAnimationFrame(animationId);
       ghost.velocity.x = 0;
       ghost.velocity.y = 0;
 
-      // // Path is to the right
-      // if (from[0] < to[0]) {
-      //   console.log(`SHOULD BE RIGHT ${ghost.name}`, from, to, from[0] < to[0]);
+      /** An array of tuples of type [number, number] */
+      const waypoint = ghost.ghostPenPath[ghost.ghostPenPathIndex];
+      const xPixel = waypoint[0] * TILE_SIZE + TILE_SIZE / 2;
+      const yPixel = waypoint[1] * TILE_SIZE + TILE_SIZE / 2;
 
-      //   ghost.velocity.x = ghost.speed;
-      // }
-      // // Path is to the left
-      // if (from[0] > to[0]) {
-      //   console.log(`SHOULD BE LEFT ${ghost.name}`, from, to, from[0] > to[0]);
-      //   ghost.velocity.x = 0;
-      //   ghost.velocity.y = 0;
-      //   ghost.velocity.x = -ghost.speed;
-      // }
-      // // Path is to the top
-      // if (from[1] > to[1]) {
-      //   console.log(`SHOULD BE TOP ${ghost.name}`, from[1] > to[1]);
-      //   ghost.velocity.x = 0;
-      //   ghost.velocity.y = 0;
-      //   ghost.velocity.y = -ghost.speed;
-      // }
-      // // Path is to the bottom
-      // if (from[1] < to[1]) {
-      //   console.log(`SHOULD BE BOTTOM ${ghost.name}`, from[1] < to[1]);
-      //   ghost.velocity.x = 0;
-      //   ghost.velocity.y = 0;
-      //   ghost.velocity.y = ghost.speed;
-      // }
-
-      const ghostColors = {
-        inky: "rgba(0, 255, 255, .5)", // cyan (#00ffff)
-        pinky: "rgba(251, 116, 187, .5)", // pink (#fb74bb)
-        blinky: "rgba(254, 13, 12, .5)", // red (#fe0d0c)
-        clyde: "rgba(255, 165, 2, .5)", // orange (#ffa502)
-      };
-
-      // Draw the path back to the ghost pen
-      for (const coords of ghost.ghostPenPath) {
-        const x = coords[0] * TILE_SIZE;
-        const y = coords[1] * TILE_SIZE;
-
-        context.fillStyle = ghostColors[ghost.name];
-        context.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+      // Go left
+      if (ghost.position.y === yPixel && ghost.position.x > xPixel) {
+        ghost.velocity.y = 0;
+        ghost.velocity.x = -ghost.speed;
+      }
+      // Go right
+      if (ghost.position.y === yPixel && ghost.position.x < xPixel) {
+        ghost.velocity.y = 0;
+        ghost.velocity.x = ghost.speed;
+      }
+      // Go up
+      if (ghost.position.x === xPixel && ghost.position.y > yPixel) {
+        ghost.velocity.x = 0;
+        ghost.velocity.y = -ghost.speed;
+      }
+      // Go down
+      if (ghost.position.x === xPixel && ghost.position.y < yPixel) {
+        ghost.velocity.x = 0;
+        ghost.velocity.y = ghost.speed;
       }
 
+      // If the ghost is exactly on the grid square described
+      // by the waypoint and if there's a next waypoint on
+      // our list of waypoints, iterate to the next waypoint set.
+      if (
+        ghost.position.x === xPixel &&
+        ghost.position.y === yPixel &&
+        ghost.ghostPenPathIndex < ghost.ghostPenPath.length - 1
+      ) {
+        ghost.ghostPenPathIndex++;
+      }
+      // Ghost re-spawn condition
+      if (
+        ghost.position.x === xPixel &&
+        ghost.position.y === yPixel &&
+        ghost.ghostPenPathIndex === ghost.ghostPenPath.length - 1
+      ) {
+        ghost.scared = false;
+        ghost.blinking = false;
+        ghost.eaten = false;
+        ghost.ghostPenPath = [];
+        ghost.ghostPenPathIndex = 0;
+        ghost.velocity.x = 0;
+        ghost.velocity.y = 0;
+      }
+
+      // Boundary.cellWidth * pinky.x + Boundary.cellWidth / 2;
       // Ghost has reach the goal
       if (
-        Math.floor(ghost.position.x / TILE_SIZE) === ghostPenPos.x &&
-        Math.floor(ghost.position.y / TILE_SIZE) === ghostPenPos.y
+        Math.floor(ghost.position.x / TILE_SIZE) ===
+          Math.floor(ghostPenPos.x + TILE_SIZE / 2) &&
+        Math.floor(ghost.position.y / TILE_SIZE) ===
+          Math.floor(ghostPenPos.y + TILE_SIZE / 2)
       ) {
         ghost.eaten = false;
         ghost.scared = false;
+        ghost.blinking = false;
         console.log("GOOOOOAAAAAAAL");
       }
     }
