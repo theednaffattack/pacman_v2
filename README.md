@@ -22,7 +22,7 @@ A pretty simple pacman demo.
 
 1. [x] Scared ghosts flash when expiring
 2. [x] Ghost sprites
-3. [ ] Ghosts spawn in cage
+3. [x] Ghosts spawn in cage
 4. [ ] Multiple lives
 5. [ ] Item bonuses to increase score
 6. [ ] Score labels on ghost and power-up hit
