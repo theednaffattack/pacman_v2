@@ -1,4 +1,4 @@
-import { SPRITE_HEIGHT, SPRITE_WIDTH } from "./constants";
+import { SPRITE_HEIGHT, SPRITE_WIDTH, TILE_SIZE } from "./constants";
 import { Player } from "./player-class";
 import { spritePositionToImagePosition } from "./sprite-position-to-image-position";
 import { spriteEntities } from "./sprite-map";
@@ -7,17 +7,40 @@ import type {
   CollisionType,
   GhostConstructor,
   GhostNameType,
-  PositionType,
+  PathfinderResultType,
+  PixelPositionType,
   VelocityType,
 } from "./types";
+
+export interface GhostLike {
+  blinking: boolean;
+  context: CanvasRenderingContext2D;
+  eaten: boolean;
+  ghostPenPath: PathfinderResultType;
+  ghostPenPathIndex: number;
+  image: HTMLImageElement;
+  name: GhostNameType;
+  position: PixelPositionType;
+  prevCollisions: CollisionType[];
+  radius: number;
+  scared: boolean;
+  scaredAboutToExpireTimer: number;
+  scaredAboutToExpireTimerDefault: number;
+  spriteIndex: [number, number];
+  speed: number;
+  velocity: VelocityType;
+}
 
 export class Ghost {
   blinking: boolean;
   context: CanvasRenderingContext2D;
   eaten: boolean;
+  /** An array of tuples of type [number, number] */
+  ghostPenPath: PathfinderResultType;
+  ghostPenPathIndex: number;
   image: HTMLImageElement;
   name: GhostNameType;
-  position: PositionType;
+  position: PixelPositionType;
   prevCollisions: CollisionType[];
   radius: number;
   scared: boolean;
@@ -41,6 +64,8 @@ export class Ghost {
     this.velocity = velocity;
     this.radius = SPRITE_WIDTH / 2;
     this.eaten = false;
+    this.ghostPenPath = [];
+    this.ghostPenPathIndex = 0;
     this.scared = false;
     this.blinking = false;
     this.speed = speed;
@@ -56,8 +81,29 @@ export class Ghost {
     this.#setImage(ctx, pacman);
   }
 
-  update(ctx: CanvasRenderingContext2D, pacman: Player) {
+  update(
+    ctx: CanvasRenderingContext2D,
+    pacman: Player,
+    mapHeight: number,
+    mapWidth: number
+  ) {
     this.draw(ctx, pacman);
+    // If ghost exits tunnel to the left
+    if (this.position.x < 0) {
+      this.position.x = mapWidth;
+    }
+    // If ghost exits tunnel to the right
+    if (this.position.x > mapWidth) {
+      this.position.x = 0;
+    }
+    // If ghost exits tunnel to the top
+    if (this.position.y < 0) {
+      this.position.y = mapHeight;
+    }
+    // If ghost exits tunnel to the bottom
+    if (this.position.y > mapHeight) {
+      this.position.y = 0;
+    }
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
@@ -66,8 +112,41 @@ export class Ghost {
     // The default normal ghost
     let obj = spritePicker({ ghost: this, player: pacman });
 
-    if (pacman.powerUpActive) {
+    if (pacman.powerUpActive && !this.eaten) {
       this.#setImageWhenPowerUpIsActive(ctx, pacman);
+    }
+
+    if (this.eaten) {
+      let eyeDirection = {
+        col: spriteEntities.eaten.right[0],
+        row: spriteEntities.eaten.right[1],
+      };
+      if (this.velocity.y < 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.top[0],
+          row: spriteEntities.eaten.top[1],
+        };
+      } else if (this.velocity.x > 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.right[0],
+          row: spriteEntities.eaten.right[1],
+        };
+      } else if (this.velocity.y > 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.bottom[0],
+          row: spriteEntities.eaten.bottom[1],
+        };
+      } else if (this.velocity.x < 0) {
+        eyeDirection = {
+          col: spriteEntities.eaten.left[0],
+          row: spriteEntities.eaten.left[1],
+        };
+      }
+
+      obj = spritePositionToImagePosition({
+        col: eyeDirection.col,
+        row: eyeDirection.row,
+      });
     }
 
     ctx.drawImage(

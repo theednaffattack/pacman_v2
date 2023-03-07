@@ -1,7 +1,5 @@
 // import fse from "fs-extra";
-import { GridPointClass } from "./grid-point-class";
-import { mapSymbolSwitcher } from "./map-symbol-switcher";
-import { MapTileSymbolType, RetrieveGhostsArgsType } from "./types";
+import { MapTileSymbolType } from "./types";
 
 export let levelOneMap: MapTileSymbolType[][] = [
   ["1", "-", "-", "-", "-", "-", "-", "-", "-", "-", "2"],
@@ -19,7 +17,7 @@ export let levelOneMap: MapTileSymbolType[][] = [
   ["4", "-", "-", "-", "-", "-", "-", "-", "-", "-", "3"],
 ];
 
-// 22 columns x 31 rows
+// 27 columns x 28 rows
 // prettier-ignore
 export let levelTwoMap: MapTileSymbolType[][] = [
 ["1","-","-","-","-","-","-","-","-","-","-","-","-","to","-","-","-","-","-","-","-","-","-","-","-","-","2",],
@@ -35,7 +33,7 @@ export let levelTwoMap: MapTileSymbolType[][] = [
 [" "," "," "," "," ","|",".","|",".",".",".",".",".",".",".",".",".",".",".","|",".","|"," "," "," "," "," ",],
 [" "," "," "," "," ","|",".","|",".","1","-","]","gg","gg","gg","[", "-","2",".","|",".","|"," "," "," "," "," "],
 ["[","-","-","-","-","3",".","_",".","|"," "," "," "," "," "," "," ","|",".","_",".","4","-","-","-","-","]"],
-[".",".",".",".",".",".",".",".",".","|"," "," "," ","."," "," "," ","|",".",".",".",".",".",".",".",".",".",],
+[".",".",".",".",".",".",".",".",".","|"," "," "," "," "," "," "," ","|",".",".",".",".",".",".",".",".",".",],
 ["[","-","-","-","-","2",".","^",".","|"," "," "," "," "," "," "," ","|",".","^",".","1","-","-","-","-","]"],
 [" "," "," "," "," ","|",".","|",".","4","-","-","-","-","-","-","-","3",".","|",".","|"," "," "," "," "," ",],
 [" "," "," "," "," ","|",".","|",".",".",".",".",".",".",".",".",".",".",".","|",".","|"," "," "," "," ",],
@@ -52,69 +50,4 @@ export let levelTwoMap: MapTileSymbolType[][] = [
 ["4","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","3",],
 ];
 
-export const levelThreeMap = [];
-
-export function convertSymbolMapToGridNodeMap({
-  map,
-}: {
-  map: MapTileSymbolType[][];
-}) {
-  // let gridNodeMap: GridPointClass[][] = [];
-
-  // console.log("VIEW GRID MAP", map);
-
-  // for (let rowIndex = 0; rowIndex < map.length; rowIndex++) {
-  //   gridNodeMap.push([]);
-  //   const row = map[rowIndex];
-  //   for (let colIndex = 0; colIndex < row.length; colIndex++) {
-  //     const cell = row[colIndex];
-
-  //     // Evaluate and convert cell here
-  //     const obj = mapSymbolSwitcher(cell);
-
-  //     gridNodeMap[rowIndex][colIndex] = new GridPointClass({
-  //       xGrid: colIndex,
-  //       yGrid: rowIndex,
-  //       spriteIndex: obj.spriteIndex,
-  //       spriteName: obj.name,
-  //     });
-  //     // // Push converted cell into 'gridNodeMap'
-  //     // gridNodeMap[rowIndex].push(
-  //     //   new GridPointClass({
-  //     //     xGrid: colIndex,
-  //     //     yGrid: rowIndex,
-  //     //     spriteIndex: obj.spriteIndex,
-  //     //     spriteName: obj.name,
-  //     //   })
-  //     // );
-  //   }
-  // }
-
-  // Return the converted map here
-  // return gridNodeMap;
-  return map.map((row, rowIndex) => {
-    return row.map((cell, colIndex) => {
-      const cellObj = mapSymbolSwitcher(cell);
-      return new GridPointClass({
-        xGrid: colIndex,
-        yGrid: rowIndex,
-        spriteIndex: cellObj.spriteIndex,
-        spriteName: cellObj.name,
-      });
-    });
-  });
-}
-
-// // TODO: Save to disk for easy testing / confirmation
-// // TODO: actually works? Maybe
-// export async function saveLevelMapToDisk({
-//   mapName,
-// }: {
-//   mapName: RetrieveGhostsArgsType["map"];
-// }) {
-//   const maps = { levelOneMap, levelTwoMap, levelThreeMap };
-//   const map = maps[mapName];
-//   const convertedMap = convertSymbolMapToGridNodeMap({ map });
-
-//   await fse.writeFile(mapName, JSON.stringify(convertedMap));
-// }
+export const levelThreeMap: MapTileSymbolType[][] = [];

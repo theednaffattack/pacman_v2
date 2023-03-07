@@ -1,13 +1,19 @@
 import { Boundary } from "./boundary-class";
+import { Gates } from "./gates-class";
 import { GridPointClass } from "./grid-point-class";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
 import { mapEntities } from "./sprite-map";
 
-export type PositionType = {
+export type PixelPositionType = {
   x: number;
   y: number;
 };
+
+export type GridPositionType = [number, number];
+
+/** An array of tuples of type [number, number] */
+export type PathfinderResultType = GridPositionType[];
 
 export type VelocityType = {
   x: number;
@@ -16,12 +22,12 @@ export type VelocityType = {
 
 export type BoundaryConstructor = {
   context: CanvasRenderingContext2D;
-  position: PositionType;
+  position: PixelPositionType;
   spriteIndex: [number, number];
 };
 
 export interface PlayerConstructor {
-  position: PositionType;
+  position: PixelPositionType;
   velocity: VelocityType;
   context: CanvasRenderingContext2D;
 }
@@ -30,7 +36,7 @@ export interface GhostConstructor extends PlayerConstructor {
   context: CanvasRenderingContext2D;
   name: GhostNameType;
   image: HTMLImageElement;
-  position: PositionType;
+  position: PixelPositionType;
   speed: number;
   spriteIndex: [number, number];
   velocity: VelocityType;
@@ -43,14 +49,11 @@ export type GhostSpriteIndexType = {
   left: [number, number];
 };
 
-export type GhostNameType =
-  | "blinky"
-  | "pinky"
-  | "inky"
-  | "clyde"
-  | "scared"
-  | "flash"
-  | "eaten";
+export type GhostNameType = "blinky" | "pinky" | "inky" | "clyde";
+
+// | "scared"
+// | "flash"
+// | "eaten";
 
 export type RowColumnType = {
   row: number;
@@ -58,7 +61,7 @@ export type RowColumnType = {
 };
 
 export type PlayerType = {
-  position: PositionType;
+  position: PixelPositionType;
   radius: number;
   velocity: VelocityType;
 };
@@ -77,9 +80,14 @@ export type GhostEntityTypes = {
 
 export type KeyType = "" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight";
 
+export type LastKeyType = {
+  value: KeyType;
+};
+
 export type InitType = {
   boundaries: Boundary[];
   context: CanvasRenderingContext2D;
+  gates: Gates[];
   pellets: Pellet[];
   powerUps: PowerUp[];
 };
@@ -204,4 +212,9 @@ export type MapTileSymbolType =
 export type RetrieveGhostsArgsType = {
   context: CanvasRenderingContext2D;
   map: "levelOneMap" | "levelTwoMap" | "levelThreeMap";
+};
+
+export type ConvertSymbolMapToPathMatrixArgs = {
+  mapName: RetrieveGhostsArgsType["map"];
+  walkableValues?: MapTileSymbolType[];
 };
