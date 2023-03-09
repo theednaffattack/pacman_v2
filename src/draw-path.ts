@@ -16,7 +16,7 @@ export function drawPath({
   };
 
   // Draw the path back to the ghost pen
-  for (const coords of ghost.ghostPenPath) {
+  for (const coords of ghost.ghostPenExitPath) {
     const x = coords[0] * TILE_SIZE;
     const y = coords[1] * TILE_SIZE;
 
