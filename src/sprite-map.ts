@@ -14,13 +14,13 @@ export const spriteGhosts: SpriteGhostTypes = {
     left: [2, 3],
   },
   pinky: {
-    top: [0, 2],
+    top: [2, 0],
     right: [3, 0],
     bottom: [3, 1],
     left: [2, 1],
   },
   clyde: {
-    top: [2, 0],
+    top: [0, 2],
     right: [1, 2],
     bottom: [1, 3],
     left: [0, 3],
