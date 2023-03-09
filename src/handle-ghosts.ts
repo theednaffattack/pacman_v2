@@ -4,15 +4,22 @@ import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
 import { convertSymbolMapToPathMatrix } from "./convert-symbol-map-to-path-matrix";
 import { Ghost } from "./ghost-class";
+import { ghostExitPen } from "./ghost-exit-pen";
 import { Player } from "./player-class";
 import { CollisionType, PathfinderResultType } from "./types";
 
+// Level two Ghost pen coordinates
+const ghostPenPos = {
+  x: 13,
+  y: 13,
+};
+
 // BEGIN types
+
 type HandleGhostsArgsType = {
   animationId: number;
   boundaries: Boundary[];
   context: CanvasRenderingContext2D;
-  gates: Boundary[];
   ghosts: Ghost[];
   paused: boolean;
   mapHeight: number;
@@ -26,19 +33,12 @@ export function handleGhosts({
   animationId,
   boundaries,
   context,
-  gates,
   ghosts,
   paused,
   mapHeight,
   mapWidth,
   player,
 }: HandleGhostsArgsType) {
-  // Level two Ghost pen coordinates
-  const ghostPenPos = {
-    x: 13,
-    y: 13,
-  };
-
   const matrix = convertSymbolMapToPathMatrix({ mapName: "levelTwoMap" });
 
   const pfGrid = new PF.Grid(matrix);
@@ -161,6 +161,7 @@ export function handleGhosts({
           case "bottom":
             ghost.velocity.y = ghost.speed;
             ghost.velocity.x = 0;
+
             break;
 
           case "left":
@@ -174,7 +175,7 @@ export function handleGhosts({
     }
 
     // Draw ghost path for new ghosts
-    if (ghost.eaten && ghost.ghostPenPath.length === 0) {
+    if (ghost.eaten && ghost.ghostPenEntryPath.length === 0) {
       ghost.velocity.x = 0;
       ghost.velocity.y = 0;
 
@@ -197,18 +198,18 @@ export function handleGhosts({
       // Set the ghost's return path to the
       // ghost pen
       // ghostEatenPaths[ghost.name] = path;
-      ghost.ghostPenPath = path;
+      ghost.ghostPenEntryPath = path;
 
       // END A STAR
     }
     // Make eaten ghosts move to the pen
-    if (ghost.eaten && ghost.ghostPenPath.length > 0) {
+    if (ghost.eaten && ghost.ghostPenEntryPath.length > 0) {
       // cancelAnimationFrame(animationId);
       ghost.velocity.x = 0;
       ghost.velocity.y = 0;
 
       /** An array of tuples of type [number, number] */
-      const waypoint = ghost.ghostPenPath[ghost.ghostPenPathIndex];
+      const waypoint = ghost.ghostPenEntryPath[ghost.ghostPenEntryPathIndex];
       const xPixel = waypoint[0] * TILE_SIZE + TILE_SIZE / 2;
       const yPixel = waypoint[1] * TILE_SIZE + TILE_SIZE / 2;
 
@@ -239,38 +240,29 @@ export function handleGhosts({
       if (
         ghost.position.x === xPixel &&
         ghost.position.y === yPixel &&
-        ghost.ghostPenPathIndex < ghost.ghostPenPath.length - 1
+        ghost.ghostPenEntryPathIndex < ghost.ghostPenEntryPath.length - 1
       ) {
-        ghost.ghostPenPathIndex++;
+        ghost.ghostPenEntryPathIndex++;
       }
       // Ghost re-spawn condition
       if (
         ghost.position.x === xPixel &&
         ghost.position.y === yPixel &&
-        ghost.ghostPenPathIndex === ghost.ghostPenPath.length - 1
+        ghost.ghostPenEntryPathIndex === ghost.ghostPenEntryPath.length - 1
       ) {
         ghost.scared = false;
         ghost.blinking = false;
         ghost.eaten = false;
-        ghost.ghostPenPath = [];
-        ghost.ghostPenPathIndex = 0;
-        ghost.velocity.x = 0;
-        ghost.velocity.y = 0;
+        ghost.ghostPenEntryPath = [];
+        ghost.ghostPenEntryPathIndex = 0;
+        ghost.exitingPen = true;
       }
+    }
 
-      // Boundary.cellWidth * pinky.x + Boundary.cellWidth / 2;
-      // Ghost has reach the goal
-      if (
-        Math.floor(ghost.position.x / TILE_SIZE) ===
-          Math.floor(ghostPenPos.x + TILE_SIZE / 2) &&
-        Math.floor(ghost.position.y / TILE_SIZE) ===
-          Math.floor(ghostPenPos.y + TILE_SIZE / 2)
-      ) {
-        ghost.eaten = false;
-        ghost.scared = false;
-        ghost.blinking = false;
-        console.log("GOOOOOAAAAAAAL");
-      }
+    // Make recovered ghosts exit the pen (otherwise there are
+    // pathfinding bugs)
+    if (ghost.exitingPen) {
+      ghostExitPen({ ghost, pathFinder, pfGrid });
     }
   });
   // END Ghost movement

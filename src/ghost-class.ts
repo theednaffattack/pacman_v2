@@ -35,9 +35,12 @@ export class Ghost {
   blinking: boolean;
   context: CanvasRenderingContext2D;
   eaten: boolean;
+  exitingPen: boolean;
   /** An array of tuples of type [number, number] */
-  ghostPenPath: PathfinderResultType;
-  ghostPenPathIndex: number;
+  ghostPenEntryPath: PathfinderResultType;
+  ghostPenExitPath: PathfinderResultType;
+  ghostPenEntryPathIndex: number;
+  ghostPenExitPathIndex: number;
   image: HTMLImageElement;
   name: GhostNameType;
   position: PixelPositionType;
@@ -64,8 +67,11 @@ export class Ghost {
     this.velocity = velocity;
     this.radius = SPRITE_WIDTH / 2;
     this.eaten = false;
-    this.ghostPenPath = [];
-    this.ghostPenPathIndex = 0;
+    this.exitingPen = false;
+    this.ghostPenEntryPath = [];
+    this.ghostPenExitPath = [];
+    this.ghostPenEntryPathIndex = 0;
+    this.ghostPenExitPathIndex = 0;
     this.scared = false;
     this.blinking = false;
     this.speed = speed;
@@ -110,7 +116,7 @@ export class Ghost {
 
   #setImage(ctx: CanvasRenderingContext2D, pacman: Player) {
     // The default normal ghost
-    let obj = spritePicker({ ghost: this, player: pacman });
+    let ghostSprite = spritePicker({ ghost: this, player: pacman });
 
     if (pacman.powerUpActive && !this.eaten) {
       this.#setImageWhenPowerUpIsActive(ctx, pacman);
@@ -143,7 +149,7 @@ export class Ghost {
         };
       }
 
-      obj = spritePositionToImagePosition({
+      ghostSprite = spritePositionToImagePosition({
         col: eyeDirection.col,
         row: eyeDirection.row,
       });
@@ -151,8 +157,8 @@ export class Ghost {
 
     ctx.drawImage(
       this.image,
-      obj.x,
-      obj.y,
+      ghostSprite.x,
+      ghostSprite.y,
       SPRITE_WIDTH,
       SPRITE_HEIGHT,
       this.position.x - SPRITE_WIDTH / 2,
