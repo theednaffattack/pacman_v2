@@ -11,11 +11,11 @@ export function drawPathLine({
   // Draw a line of the ghost's path
   for (
     let pathIndex = 0;
-    pathIndex < ghost.ghostPenPath.length - 1;
+    pathIndex < ghost.ghostPenEntryPath.length - 1;
     pathIndex++
   ) {
-    const [x0, y0] = ghost.ghostPenPath[pathIndex];
-    const [x1, y1] = ghost.ghostPenPath[pathIndex + 1];
+    const [x0, y0] = ghost.ghostPenEntryPath[pathIndex];
+    const [x1, y1] = ghost.ghostPenEntryPath[pathIndex + 1];
 
     context.beginPath();
     context.moveTo(
