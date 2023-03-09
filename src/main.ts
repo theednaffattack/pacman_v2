@@ -46,6 +46,7 @@ let animationId = 0;
 let config = { score: 0 };
 let lastKey: { value: KeyType } = { value: "" };
 let ghosts = retrieveGhosts({ context, map: "levelTwoMap" });
+let pacmanLives = { value: 2 };
 
 let loseGameSound = new Sound({ src: "./src/audio/death.mp3" });
 // let eatPelletSound = new Sound({ src: "./src/audio/eat1.mp3" });
@@ -60,6 +61,22 @@ let player = new Player({
   },
   velocity: { x: 0, y: 0 },
 });
+
+// const trigger = document.querySelector(".trigger");
+const modal = document.querySelector(".modal");
+const closeButton = document.querySelector(".close-button");
+
+function toggleModal() {
+  if (modal) {
+    modal.classList.toggle("show-modal");
+  }
+}
+
+function windowOnClick(event: MouseEvent) {
+  if (event.target === modal) {
+    toggleModal();
+  }
+}
 
 // let powerDotTimer = new Timer(function () {
 //   player.powerUpActive = false;
@@ -146,6 +163,7 @@ function animate() {
       } else if (ghost.scared && ghost.eaten) {
         // DO NOTHING
       } else {
+        toggleModal();
         loseGameSound.play();
         cancelAnimationFrame(animationId);
       }
@@ -193,9 +211,7 @@ function animate() {
   handleGhosts({
     animationId,
     boundaries,
-    // cancelAnimationFrame,
     context,
-    gates,
     ghosts,
     paused,
     player,
@@ -299,3 +315,9 @@ addEventListener("keydown", ({ key }) => {
 addEventListener("keyup", ({ key }) => {
   handleKeyup({ key, keys });
 });
+
+addEventListener("click", windowOnClick);
+
+if (closeButton) {
+  closeButton.addEventListener("click", toggleModal);
+}
