@@ -1,44 +1,42 @@
-import { Player } from "./player-class";
-import { KeysRegisterType, LastKeyType } from "./types";
+import { ConfigType, LastKeyType } from "./types";
 
 type HandleKeydownArgsType = {
   key: string;
-  keys: KeysRegisterType;
   lastKey: LastKeyType;
-  player: Player;
+  config: ConfigType;
 };
 
 export function handleKeydown({
+  config,
   key,
-  keys,
+  // keys,
   lastKey,
-  player,
 }: HandleKeydownArgsType) {
   switch (key) {
     case "ArrowUp":
-      if (!player.madeTheFirstMove) {
-        player.madeTheFirstMove = true;
+      if (!config.player.madeTheFirstMove) {
+        config.player.madeTheFirstMove = true;
       }
-      keys.ArrowUp.pressed = true;
+      config.keys.ArrowUp.pressed = true;
       lastKey.value = "ArrowUp";
       break;
     case "ArrowDown":
-      if (!player.madeTheFirstMove) {
-        player.madeTheFirstMove = true;
+      if (!config.player.madeTheFirstMove) {
+        config.player.madeTheFirstMove = true;
       }
-      keys.ArrowDown.pressed = true;
+      config.keys.ArrowDown.pressed = true;
       lastKey.value = "ArrowDown";
       break;
     case "ArrowLeft":
-      if (!player.madeTheFirstMove) {
-        player.madeTheFirstMove = true;
+      if (!config.player.madeTheFirstMove) {
+        config.player.madeTheFirstMove = true;
       }
-      keys.ArrowLeft.pressed = true;
+      config.keys.ArrowLeft.pressed = true;
       lastKey.value = "ArrowLeft";
 
       break;
     case "ArrowRight":
-      keys.ArrowRight.pressed = true;
+      config.keys.ArrowRight.pressed = true;
       lastKey.value = "ArrowRight";
       break;
     default:

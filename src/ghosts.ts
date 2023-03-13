@@ -9,22 +9,22 @@ const sprite = createImage(spriteURL);
 export function retrieveGhosts({ context, map }: RetrieveGhostsArgsType) {
   const ghostGridPosition = {
     levelOneMap: {
-      pinky: { x: 6, y: 3 },
-      blinky: { x: 9, y: 7 },
-      inky: { x: 8, y: 11 },
-      clyde: { x: 2, y: 11 },
+      pinky: { x: 6, y: 3, velocity: { y: 0, x: Ghost.speed } },
+      blinky: { x: 9, y: 7, velocity: { y: -Ghost.speed, x: 0 } },
+      inky: { x: 8, y: 11, velocity: { y: 0, x: -Ghost.speed } },
+      clyde: { x: 2, y: 11, velocity: { y: 0, x: Ghost.speed } },
     },
     levelTwoMap: {
-      pinky: { x: 12, y: 5 },
-      blinky: { x: 25, y: 3 },
-      inky: { x: 6, y: 22 },
-      clyde: { x: 20, y: 22 },
+      pinky: { x: 12, y: 5, velocity: { y: -Ghost.speed, x: 0 } },
+      blinky: { x: 25, y: 3, velocity: { y: -Ghost.speed, x: 0 } },
+      inky: { x: 6, y: 22, velocity: { y: -Ghost.speed, x: 0 } },
+      clyde: { x: 20, y: 22, velocity: { y: -Ghost.speed, x: 0 } },
     },
     levelThreeMap: {
-      pinky: { x: 12, y: 5 },
-      blinky: { x: 25, y: 3 },
-      inky: { x: 6, y: 22 },
-      clyde: { x: 20, y: 22 },
+      pinky: { x: 12, y: 5, velocity: { y: -Ghost.speed, x: 0 } },
+      blinky: { x: 25, y: 3, velocity: { y: -Ghost.speed, x: 0 } },
+      inky: { x: 6, y: 22, velocity: { y: -Ghost.speed, x: 0 } },
+      clyde: { x: 20, y: 22, velocity: { y: -Ghost.speed, x: 0 } },
     },
   };
 
@@ -41,7 +41,7 @@ export function retrieveGhosts({ context, map }: RetrieveGhostsArgsType) {
       image: sprite,
       speed: 2,
       spriteIndex: [3, 0],
-      velocity: { y: -Ghost.speed, x: 0 },
+      velocity: { y: pinky.velocity.y, x: pinky.velocity.x },
     }),
     new Ghost({
       context,
@@ -53,7 +53,7 @@ export function retrieveGhosts({ context, map }: RetrieveGhostsArgsType) {
         y: Boundary.cellHeight * blinky.y + Boundary.cellHeight / 2,
       },
       speed: 2,
-      velocity: { y: -Ghost.speed, x: 0 },
+      velocity: { y: blinky.velocity.y, x: blinky.velocity.x },
     }),
     new Ghost({
       context,
@@ -65,7 +65,7 @@ export function retrieveGhosts({ context, map }: RetrieveGhostsArgsType) {
         y: Boundary.cellHeight * inky.y + Boundary.cellHeight / 2,
       },
       speed: 2,
-      velocity: { y: -Ghost.speed, x: 0 },
+      velocity: { y: inky.velocity.y, x: inky.velocity.x },
     }),
     new Ghost({
       context,
@@ -77,7 +77,7 @@ export function retrieveGhosts({ context, map }: RetrieveGhostsArgsType) {
         y: Boundary.cellHeight * clyde.y + Boundary.cellHeight / 2,
       },
       speed: 2,
-      velocity: { y: -Ghost.speed, x: 0 },
+      velocity: { y: clyde.velocity.y, x: clyde.velocity.x },
     }),
   ];
 }

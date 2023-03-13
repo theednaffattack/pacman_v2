@@ -2,46 +2,53 @@ import { ObstacleType, GhostEntityTypes as SpriteGhostTypes } from "./types";
 
 export const spriteGhosts: SpriteGhostTypes = {
   blinky: {
-    top: [0, 0],
+    up: [0, 0],
     right: [1, 0],
-    bottom: [1, 1],
+    down: [1, 1],
     left: [0, 1],
+    stationary: [1, 0],
   },
   inky: {
-    top: [2, 2],
+    up: [2, 2],
     right: [3, 2],
-    bottom: [3, 3],
+    down: [3, 3],
     left: [2, 3],
+    stationary: [3, 2],
   },
   pinky: {
-    top: [2, 0],
+    up: [2, 0],
     right: [3, 0],
-    bottom: [3, 1],
+    down: [3, 1],
     left: [2, 1],
+    stationary: [3, 0],
   },
   clyde: {
-    top: [0, 2],
+    up: [0, 2],
     right: [1, 2],
-    bottom: [1, 3],
+    down: [1, 3],
     left: [0, 3],
+    stationary: [1, 2],
   },
   eaten: {
-    top: [4, 2],
+    up: [4, 2],
     right: [5, 2],
-    bottom: [5, 3],
+    down: [5, 3],
     left: [4, 3],
+    stationary: [5, 2],
   },
   scared: {
-    top: [9, 0],
+    up: [9, 0],
     right: [9, 0],
-    bottom: [9, 0],
+    down: [9, 0],
     left: [9, 0],
+    stationary: [9, 0],
   },
-  flash: {
-    top: [8, 0],
+  blinking: {
+    up: [8, 0],
     right: [8, 0],
-    bottom: [8, 0],
+    down: [8, 0],
     left: [8, 0],
+    stationary: [8, 0],
   },
 };
 

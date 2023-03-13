@@ -51,3 +51,5 @@ export let levelTwoMap: MapTileSymbolType[][] = [
 ];
 
 export const levelThreeMap: MapTileSymbolType[][] = [];
+
+export const pacMaps = { levelOneMap, levelTwoMap, levelThreeMap };

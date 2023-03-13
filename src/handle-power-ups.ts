@@ -1,69 +1,71 @@
-import { Ghost } from "./ghost-class";
-import { Player } from "./player-class";
 import { Sound } from "./sound-class";
+import { Timer } from "./timer-class";
+import { ConfigType } from "./types";
 
 type HandlePowerUpsArgsType = {
   eatPowerUpSound: Sound;
-  ghosts: Ghost[];
-  powerUps: any[];
-  player: Player;
-  powerDotTimer: any;
-  powerDotAboutToExpireTimer: any;
-  config: { score: number };
+  // powerDotTimer: Timer;
+  // powerDotAboutToExpireTimer: Timer;
+  config: ConfigType;
   scoreElement: HTMLElement | null;
 };
 
 export function handlePowerUps({
   eatPowerUpSound,
-  ghosts,
-  player,
-  powerDotAboutToExpireTimer,
-  powerDotTimer,
-  powerUps,
   config,
   scoreElement,
 }: HandlePowerUpsArgsType) {
   for (
-    let powerUpIndex = powerUps.length - 1;
+    let powerUpIndex = config.powerUps.length - 1;
     0 <= powerUpIndex;
     powerUpIndex--
   ) {
-    const powerUp = powerUps[powerUpIndex];
+    const powerUp = config.powerUps[powerUpIndex];
     powerUp.draw();
 
-    // Player collides with power up eat powerup
+    // Player collides with power up, eat powerup
     if (
       Math.hypot(
-        powerUp.position.x - player.position.x,
-        powerUp.position.y - player.position.y
+        powerUp.position.x - config.player.position.x,
+        powerUp.position.y - config.player.position.y
       ) <
-      powerUp.radius + player.radius
+      powerUp.radius + config.player.radius
     ) {
-      powerUps.splice(powerUpIndex, 1);
-      player.powerUpActive = true;
-      player.powerUpAboutToExpire = false;
+      config.powerUps.splice(powerUpIndex, 1);
+      // config.player.powerUpActive = true;
+      // config.player.powerUpAboutToExpire = false;
       eatPowerUpSound.play();
 
-      // If we already have active timers we
-      // need to clear them before setting new ones.
-      player.timers.forEach((timer) => {
-        clearTimeout(timer);
+      // Make ghosts scared
+      config.ghosts.forEach((ghost) => {
+        ghost.behavior = "scared";
+
+        setTimeout(() => {
+          ghost.behavior = "default";
+        }, 1000 * config.powerDotActiveSeconds);
       });
 
-      // Now clear out the timers array
-      player.timers = [];
+      // // If we already have active timers we
+      // // need to clear them before setting new ones.
+      // config.player.timers.forEach((timer) => {
+      //   // clearTimeout(timer);
+      //   timer.clear();
+      // });
 
-      player.timers.push(powerDotTimer);
+      // // Now clear out the timers array
+      // config.player.timers = [];
+      // powerDotTimer.resume();
+      // config.player.timers.push(powerDotTimer);
+      // powerDotAboutToExpireTimer.resume();
+      // config.player.timers.push(powerDotAboutToExpireTimer);
 
-      player.timers.push(powerDotAboutToExpireTimer);
-
-      ghosts.forEach((ghost) => {
-        if (player.powerUpActive) {
-          ghost.scared = true;
-        } else {
-          ghost.scared = false;
-        }
-      });
+      // config.ghosts.forEach((ghost) => {
+      //   if (config.player.powerUpActive) {
+      //     ghost.scared = true;
+      //   } else {
+      //     ghost.scared = false;
+      //   }
+      // });
       config.score += 20;
       if (!scoreElement) {
         console.error("Score element is missing!");

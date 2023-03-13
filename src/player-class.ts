@@ -1,3 +1,4 @@
+import { Timer } from "./timer-class";
 import { PixelPositionType, VelocityType, PlayerConstructor } from "./types";
 
 export class Player {

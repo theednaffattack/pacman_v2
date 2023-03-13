@@ -1,25 +1,39 @@
 import { Boundary } from "./boundary-class";
+import { TILE_SIZE } from "./constants";
 import { Gates } from "./gates-class";
-import { levelTwoMap } from "./level-maps";
+import { pacMaps } from "./level-maps";
 import { Pellet } from "./pellet-class";
 import { PowerUp } from "./power-up-class";
 import { spriteEntities } from "./sprite-map";
-import type { InitType } from "./types";
+import type { ConfigType, InitType } from "./types";
 
 // Additional cases
-export function initGameArea({
-  boundaries,
-  context,
-  gates,
-  pellets,
-  powerUps,
-}: InitType) {
-  levelTwoMap.forEach((row, rowIndex) => {
+export function initGameArea({ canvas, config, context, gates }: InitType) {
+  // TILE_SIZE is a square so width / height is the
+  // same.
+  // Set the width to the number of colums * tileSize
+  canvas.width = pacMaps[config.map][0].length * TILE_SIZE;
+  // Set the height to the number rows * tileSize
+  canvas.height = pacMaps[config.map].length * TILE_SIZE;
+  let whichMap: ConfigType["map"];
+  switch (config.level) {
+    case "one":
+      whichMap = "levelOneMap";
+      break;
+    case "two":
+      whichMap = "levelTwoMap";
+      break;
+    case "three":
+      whichMap = "levelThreeMap";
+      break;
+  }
+
+  pacMaps[whichMap].forEach((row, rowIndex) => {
     row.forEach((symbol, columnIndex) => {
       switch (symbol) {
         // pipe horizontal
         case "-":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -33,7 +47,7 @@ export function initGameArea({
 
         // pipe vertical
         case "|":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -47,7 +61,7 @@ export function initGameArea({
 
         // pipe corner 1 - upper left
         case "1":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -62,7 +76,7 @@ export function initGameArea({
 
         // Pipe corner 2 - upper right
         case "2":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -77,7 +91,7 @@ export function initGameArea({
 
         // Pipe corner 3 - bottom right
         case "3":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -92,7 +106,7 @@ export function initGameArea({
 
         // Pipe corner 4 - bottom left
         case "4":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -107,7 +121,7 @@ export function initGameArea({
 
         // Block - a one tile sized block
         case "b":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -122,7 +136,7 @@ export function initGameArea({
 
         // Cap left - a cap for one tile sized open entities
         case "[":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -135,7 +149,7 @@ export function initGameArea({
           );
           break;
         case "]":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -147,7 +161,7 @@ export function initGameArea({
           );
           break;
         case "_":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -160,7 +174,7 @@ export function initGameArea({
           );
           break;
         case "^":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -173,7 +187,7 @@ export function initGameArea({
           );
           break;
         case "+":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -186,7 +200,7 @@ export function initGameArea({
           );
           break;
         case "5":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -198,7 +212,7 @@ export function initGameArea({
           );
           break;
         case "6":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -211,7 +225,7 @@ export function initGameArea({
           );
           break;
         case "7":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -224,7 +238,7 @@ export function initGameArea({
           );
           break;
         case "8":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -237,7 +251,7 @@ export function initGameArea({
           );
           break;
         case ".":
-          pellets.push(
+          config.pellets.push(
             new Pellet({
               context,
               position: {
@@ -249,7 +263,7 @@ export function initGameArea({
           break;
 
         case "p":
-          powerUps.push(
+          config.powerUps.push(
             new PowerUp({
               context,
               position: {
@@ -262,7 +276,7 @@ export function initGameArea({
 
         // Upper left corner boundary
         case "ul":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -276,7 +290,7 @@ export function initGameArea({
 
         // Upper right corner boundary
         case "ur":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -290,7 +304,7 @@ export function initGameArea({
 
         // Bottom left corner boundary
         case "bl":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -304,7 +318,7 @@ export function initGameArea({
 
         // Bottom right corner boundary
         case "br":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -318,7 +332,7 @@ export function initGameArea({
 
         // Top of the tile only boundary (a line)
         case "to":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -332,7 +346,7 @@ export function initGameArea({
 
         // Bottom of the tile oriented boundary (a line)
         case "bo":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -346,7 +360,7 @@ export function initGameArea({
 
         // Left of the tile oriented boundary (a line)
         case "lo":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {
@@ -360,7 +374,7 @@ export function initGameArea({
 
         // Right of the tile oriented boundary (a line)
         case "ro":
-          boundaries.push(
+          config.boundaries.push(
             new Boundary({
               context,
               position: {

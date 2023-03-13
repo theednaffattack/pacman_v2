@@ -1,7 +1,9 @@
 import { Boundary } from "./boundary-class";
 import { Gates } from "./gates-class";
+import { Ghost } from "./ghost-class";
 import { GridPointClass } from "./grid-point-class";
 import { Pellet } from "./pellet-class";
+import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
 import { mapEntities } from "./sprite-map";
 
@@ -43,10 +45,11 @@ export interface GhostConstructor extends PlayerConstructor {
 }
 
 export type GhostSpriteIndexType = {
-  top: [number, number];
+  up: [number, number];
   right: [number, number];
-  bottom: [number, number];
+  down: [number, number];
   left: [number, number];
+  stationary: [number, number];
 };
 
 export type GhostNameType = "blinky" | "pinky" | "inky" | "clyde";
@@ -75,7 +78,7 @@ export type GhostEntityTypes = {
   clyde: GhostSpriteIndexType;
   eaten: GhostSpriteIndexType;
   scared: GhostSpriteIndexType;
-  flash: GhostSpriteIndexType;
+  blinking: GhostSpriteIndexType;
 };
 
 export type KeyType = "" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight";
@@ -85,11 +88,10 @@ export type LastKeyType = {
 };
 
 export type InitType = {
-  boundaries: Boundary[];
+  canvas: HTMLCanvasElement;
+  config: ConfigType;
   context: CanvasRenderingContext2D;
   gates: Gates[];
-  pellets: Pellet[];
-  powerUps: PowerUp[];
 };
 
 export type KeysRegisterType = {
@@ -209,12 +211,30 @@ export type MapTileSymbolType =
   | " "
   | "";
 
+export type MapTypes = "levelOneMap" | "levelTwoMap" | "levelThreeMap";
+
 export type RetrieveGhostsArgsType = {
   context: CanvasRenderingContext2D;
-  map: "levelOneMap" | "levelTwoMap" | "levelThreeMap";
+  map: MapTypes;
 };
 
 export type ConvertSymbolMapToPathMatrixArgs = {
   mapName: RetrieveGhostsArgsType["map"];
   walkableValues?: MapTileSymbolType[];
+};
+
+export type ConfigType = {
+  boundaries: Boundary[];
+  ghosts: Ghost[];
+  keys: KeysRegisterType;
+  level: "one" | "two" | "three";
+  map: MapTypes;
+  pacmanLives: number;
+  paused: boolean;
+  pellets: Pellet[];
+  player: Player;
+  powerUps: PowerUp[];
+  powerDotActiveSeconds: number;
+  powerDotExpireWarningSec: number;
+  score: number;
 };

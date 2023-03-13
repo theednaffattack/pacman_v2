@@ -1,26 +1,27 @@
-import { KeysRegisterType } from "./types";
+import { ConfigType } from "./types";
 
 type HandleKeyupArgsType = {
   key: string;
-  keys: KeysRegisterType;
+  // keys: KeysRegisterType;
+  config: ConfigType;
 };
 
-export function handleKeyup({ key, keys }: HandleKeyupArgsType) {
+export function handleKeyup({ config, key }: HandleKeyupArgsType) {
   switch (key) {
     case "ArrowUp":
-      keys.ArrowUp.pressed = false;
+      config.keys.ArrowUp.pressed = false;
       break;
 
     case "ArrowDown":
-      keys.ArrowDown.pressed = false;
+      config.keys.ArrowDown.pressed = false;
       break;
 
     case "ArrowLeft":
-      keys.ArrowLeft.pressed = false;
+      config.keys.ArrowLeft.pressed = false;
       break;
 
     case "ArrowRight":
-      keys.ArrowRight.pressed = false;
+      config.keys.ArrowRight.pressed = false;
 
       break;
 

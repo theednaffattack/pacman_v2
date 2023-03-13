@@ -16,7 +16,7 @@ export function determineGhostState({
   position: "top" | "right" | "bottom" | "left";
   sprites: GhostEntityTypes;
 }) {
-  if (blinking) {
+  if (ghost.blinking) {
     ghost.scaredAboutToExpireTimer--;
     if (ghost.scaredAboutToExpireTimer === 0) {
       ghost.scaredAboutToExpireTimer = ghost.scaredAboutToExpireTimerDefault;
@@ -28,10 +28,10 @@ export function determineGhostState({
     }
   }
   const index = colOrRow === "col" ? 0 : 1;
-  if (eaten) {
+  if (ghost.eaten) {
     return sprites.eaten[position][index];
-  } else if (blinking) {
-    return sprites.flash[position][index];
+  } else if (ghost.blinking) {
+    return sprites.blinking[position][index];
   } else {
     return sprites.scared[position][index];
   }

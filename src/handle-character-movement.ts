@@ -1,84 +1,78 @@
-import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { Gates } from "./gates-class";
-import { Player } from "./player-class";
-import { KeysRegisterType, LastKeyType } from "./types";
+import { ConfigType, LastKeyType } from "./types";
 
 type HandleCharacterMovementArgsType = {
-  boundaries: Boundary[];
+  config: ConfigType;
   gates: Gates[];
-  keys: KeysRegisterType;
   lastKey: LastKeyType;
-  player: Player;
 };
 
 export function handleCharacterMovement({
-  keys,
-  boundaries: originalBoundaries,
+  config,
   gates,
   lastKey,
-  player,
 }: HandleCharacterMovementArgsType) {
-  const boundaries = [...originalBoundaries, ...gates];
+  const boundaries = [...config.boundaries, ...gates];
 
-  if (keys.ArrowUp.pressed && lastKey.value === "ArrowUp") {
+  if (config.keys.ArrowUp.pressed && lastKey.value === "ArrowUp") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
         circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: 0, y: -5 } },
+          circle: { ...config.player, velocity: { x: 0, y: -5 } },
           rectangle: boundary,
         })
       ) {
-        player.velocity.y = 0;
+        config.player.velocity.y = 0;
         break;
       } else {
-        player.velocity.y = -5;
+        config.player.velocity.y = -5;
       }
     }
-  } else if (keys.ArrowDown.pressed && lastKey.value === "ArrowDown") {
+  } else if (config.keys.ArrowDown.pressed && lastKey.value === "ArrowDown") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
         circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: 0, y: 5 } },
+          circle: { ...config.player, velocity: { x: 0, y: 5 } },
           rectangle: boundary,
         })
       ) {
-        player.velocity.y = 0;
+        config.player.velocity.y = 0;
         break;
       } else {
-        player.velocity.y = 5;
+        config.player.velocity.y = 5;
       }
     }
-  } else if (keys.ArrowLeft.pressed && lastKey.value === "ArrowLeft") {
+  } else if (config.keys.ArrowLeft.pressed && lastKey.value === "ArrowLeft") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
         circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: -5, y: 0 } },
+          circle: { ...config.player, velocity: { x: -5, y: 0 } },
           rectangle: boundary,
         })
       ) {
-        player.velocity.x = 0;
+        config.player.velocity.x = 0;
         break;
       } else {
-        player.velocity.x = -5;
+        config.player.velocity.x = -5;
       }
     }
-  } else if (keys.ArrowRight.pressed && lastKey.value === "ArrowRight") {
+  } else if (config.keys.ArrowRight.pressed && lastKey.value === "ArrowRight") {
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
         circleCollidesWithRectangle({
-          circle: { ...player, velocity: { x: 5, y: 0 } },
+          circle: { ...config.player, velocity: { x: 5, y: 0 } },
           rectangle: boundary,
         })
       ) {
-        player.velocity.x = 0;
+        config.player.velocity.x = 0;
         break;
       } else {
-        player.velocity.x = 5;
+        config.player.velocity.x = 5;
       }
     }
   }
