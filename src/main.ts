@@ -88,20 +88,6 @@ function handleWindowOnClick(event: MouseEvent) {
   }
 }
 
-// let powerDotTimer = setTimeout(() => {
-//   config.player.powerUpActive = false;
-//   config.player.powerUpAboutToExpire = false;
-//   config.ghosts.forEach((ghost) => {
-//     ghost.blinking = false;
-//     ghost.scared = false;
-//   });
-//   console.log("TIMER!!!", 1000 * config.powerDotActiveSeconds);
-// }, 1000 * config.powerDotActiveSeconds);
-
-// let powerDotAboutToExpireTimer = new Timer(() => {
-//   config.player.powerUpAboutToExpire = true;
-// }, 1000 * expireWarningSec);
-
 const restartButton = document.getElementById("reset-button");
 const pauseButton = document.getElementById("pause-button");
 const nextLevelButton = document.getElementById("next-level-button");
@@ -178,15 +164,39 @@ function animate() {
   // Win level condition
   if (config.pellets.length === 0) {
     // cancelAnimationFrame(animationId);
-    config.paused = true;
-    initGameArea({
-      canvas,
-      config: { ...config, level: "two" },
-      context,
-      gates,
-    });
+    switch (config.level) {
+      case "one":
+        config.paused = true;
+        initGameArea({
+          canvas,
+          config: { ...config, level: "two" },
+          context,
+          gates,
+        });
 
-    config.paused = false;
+        config.paused = false;
+        break;
+      case "two":
+        config.paused = true;
+        initGameArea({
+          canvas,
+          config: { ...config, level: "three" },
+          context,
+          gates,
+        });
+
+        config.paused = false;
+        break;
+      case "three":
+        let modalTitle = document.getElementById("modal-title");
+        if (modalTitle) {
+          modalTitle.innerHTML = "Congrats you WIN!!!";
+
+          handleToggleModal();
+        }
+        break;
+    }
+
     // TODO: 1. Modal congratulations
     // TODO: 2. Generate game board and ghosts for next level.
     // TODO: 3. If it's the final level, end the game.
