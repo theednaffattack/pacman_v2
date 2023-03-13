@@ -38,10 +38,14 @@ export function handlePowerUps({
 
       // Make ghosts scared
       config.ghosts.forEach((ghost) => {
-        ghost.behavior = "scared";
+        if (ghost.behavior !== "eaten") {
+          ghost.behavior = "scared";
+        }
 
         setTimeout(() => {
-          ghost.behavior = "default";
+          if (ghost.behavior !== "eaten") {
+            ghost.behavior = "default";
+          }
         }, 1000 * config.powerDotActiveSeconds);
       });
 
