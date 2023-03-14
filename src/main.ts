@@ -130,8 +130,6 @@ function animate() {
       ) <
         ghost.radius + config.player.radius &&
       ghost.behavior === "default"
-      // !ghost.scared &&
-      // !ghost.eaten
     ) {
       if (modalTitle) {
         modalTitle.innerHTML = "You lose!";
