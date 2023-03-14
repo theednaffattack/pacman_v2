@@ -25,6 +25,7 @@ export const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 const scoreElement = document.getElementById("score");
 const levelElement = document.getElementById("level-info");
 const timeoutButton = document.getElementById("timeout-button");
+const modalTitle = document.getElementById("modal-title");
 
 const context = canvas.getContext("2d");
 if (!context) {
@@ -132,6 +133,9 @@ function animate() {
       // !ghost.scared &&
       // !ghost.eaten
     ) {
+      if (modalTitle) {
+        modalTitle.innerHTML = "You lose!";
+      }
       handleToggleModal();
       loseGameSound.play();
       cancelAnimationFrame(animationId);
@@ -179,7 +183,6 @@ function animate() {
         config.paused = false;
         break;
       case "three":
-        let modalTitle = document.getElementById("modal-title");
         if (modalTitle) {
           modalTitle.innerHTML = "Congrats you WIN!!!";
 
