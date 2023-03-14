@@ -144,7 +144,6 @@ function animate() {
         ghost.radius + config.player.radius &&
       (ghost.behavior === "scared" || ghost.behavior === "blinking")
     ) {
-      // ghost.eaten = true;
       ghost.behavior = "eaten";
       ghost.velocity.x = 0;
       ghost.velocity.y = 0;
@@ -152,14 +151,6 @@ function animate() {
       eatGhostSound.play();
     }
   });
-
-  // for (
-  //   let ghostIndex = config.ghosts.length - 1;
-  //   0 <= ghostIndex;
-  //   ghostIndex--
-  // ) {
-  //   const ghost = config.ghosts[ghostIndex];
-  // }
 
   // Win level condition
   if (config.pellets.length === 0) {
