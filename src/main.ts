@@ -26,6 +26,7 @@ const scoreElement = document.getElementById("score");
 const levelElement = document.getElementById("level-info");
 const timeoutButton = document.getElementById("timeout-button");
 const modalTitle = document.getElementById("modal-title");
+const pacLivesContainer = document.getElementById("pacman-lives");
 
 const context = canvas.getContext("2d");
 if (!context) {
@@ -142,6 +143,20 @@ function animate() {
       if (config.player.lives > 0) {
         config.player.lives--;
         // replayLevelButton.innerHTML = "Try again";
+        if(pacLivesContainer){
+          // Clear out the current lives
+          pacLivesContainer.innerHTML = "";
+          let newLives = Array.from(Array(config.player.lives));
+          newLives.forEach(()=>{
+            // <img src='./src/image/pac-life.png' width='44' height='51' />
+            let imgElem = new Image();
+            imgElem.src = "./src/image/pac-life.png";
+            imgElem.width = 44;
+            imgElem.height = 51;
+            pacLivesContainer.appendChild(imgElem);
+          })
+          pacLivesContainer
+        }
       }
     } else if (
       // Eat ghost scenario
