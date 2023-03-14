@@ -15,6 +15,8 @@ export function initGameArea({ canvas, config, context, gates }: InitType) {
   canvas.width = pacMaps[config.map][0].length * TILE_SIZE;
   // Set the height to the number rows * tileSize
   canvas.height = pacMaps[config.map].length * TILE_SIZE;
+
+  // Determine which map to load
   let whichMap: ConfigType["map"];
   switch (config.level) {
     case "one":
@@ -28,6 +30,26 @@ export function initGameArea({ canvas, config, context, gates }: InitType) {
       break;
   }
 
+  // Populate pacman lives indicator
+    let newLives = Array.from(Array(config.player.lives));
+    let pacLivesContainer = document.getElementById("pacman-lives");
+    
+    if(pacLivesContainer){
+      pacLivesContainer.innerHTML = "";
+
+    newLives.forEach(()=>{
+          let imgElem = new Image();
+          imgElem.src = "./src/image/pac-life.png";
+          imgElem.width = 44;
+          imgElem.height = 51;
+          pacLivesContainer?.appendChild(imgElem);
+    })
+  }
+    
+  
+  
+
+  // Put map elements into config object
   pacMaps[whichMap].forEach((row, rowIndex) => {
     row.forEach((symbol, columnIndex) => {
       switch (symbol) {
