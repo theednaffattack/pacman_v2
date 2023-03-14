@@ -137,6 +137,12 @@ function animate() {
       handleToggleModal();
       loseGameSound.play();
       cancelAnimationFrame(animationId);
+
+      // Manage lives
+      if (config.player.lives > 0) {
+        config.player.lives--;
+        // replayLevelButton.innerHTML = "Try again";
+      }
     } else if (
       // Eat ghost scenario
       Math.hypot(
