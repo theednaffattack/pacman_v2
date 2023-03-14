@@ -38,7 +38,9 @@ export function handleNextLevelClick({
       levelElement.innerHTML = "3";
       break;
     case "three":
-      // do nothing
+      config.map = "levelOneMap";
+      config.level = "one";
+      levelElement.innerHTML = "1";
       break;
   }
 
