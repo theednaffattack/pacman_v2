@@ -1,8 +1,8 @@
-import { Timer } from "./timer-class";
 import { PixelPositionType, VelocityType, PlayerConstructor } from "./types";
 
 export class Player {
   context: CanvasRenderingContext2D;
+  lives: number;
   madeTheFirstMove: boolean;
   openRate: number;
   position: PixelPositionType;
@@ -15,8 +15,9 @@ export class Player {
   velocity: VelocityType;
 
   constructor({ context, position, velocity }: PlayerConstructor) {
-    this.openRate = 0.08;
+    this.lives = 2;
     this.madeTheFirstMove = false;
+    this.openRate = 0.08;
     this.position = position;
     this.velocity = velocity;
     this.radius = 15;
