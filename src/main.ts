@@ -1,3 +1,4 @@
+import GUI from "lil-gui";
 import { Boundary } from "./boundary-class";
 import { circleCollidesWithRectangle } from "./circle-collides-with-rectangle";
 import { TILE_SIZE } from "./constants";
@@ -7,7 +8,7 @@ import { handleGhosts } from "./handle-ghosts";
 import { handleKeydown } from "./handle-keydown";
 import { handleKeyup } from "./handle-keyup";
 import { handlePellets } from "./handle-pellets";
-import { handlePowerUps } from "./handle-power-ups";
+import { handlePowerUps, showPowerUpState } from "./handle-power-ups";
 import { initGameArea } from "./init-game-area";
 import { levelTwoMap } from "./level-maps";
 import { Pellet } from "./pellet-class";
@@ -15,6 +16,7 @@ import { Player } from "./player-class";
 import { PowerUp } from "./power-up-class";
 import { Sound } from "./sound-class";
 import type { KeysRegisterType, KeyType } from "./types";
+import { powerDotTimer } from "./power-dot-timer";
 
 const activeSec = 10;
 const expireWarningSec = 3;
@@ -61,6 +63,9 @@ let player = new Player({
   velocity: { x: 0, y: 0 },
 });
 
+const gui = new GUI();
+gui.add(player, "powerUpActive", 0, 10);
+
 // let powerDotTimer = new Timer(function () {
 //   player.powerUpActive = false;
 //   player.powerUpAboutToExpire = false;
@@ -72,23 +77,16 @@ let player = new Player({
 //   console.log("TIMER!!!");
 // }, 1000 * activeSec);
 
-let powerDotTimer = setTimeout(() => {
-  player.powerUpActive = false;
-  player.powerUpAboutToExpire = false;
-  ghosts.forEach((ghost) => {
-    ghost.blinking = false;
-    ghost.scared = false;
-    // ghost.eaten = false;
-  });
-  console.log("TIMER!!!", 1000 * activeSec);
-}, 1000 * activeSec);
-
 // let powerDotAboutToExpireTimer = new Timer(() => {
 //   player.powerUpAboutToExpire = true;
 // }, 1000 * expireWarningSec);
 
 let powerDotAboutToExpireTimer = setTimeout(() => {
   player.powerUpAboutToExpire = true;
+  console.log(
+    "POWER DOT EXPIRING TIMER!!!",
+    expireWarningSec + " SECONDS TOTAL"
+  );
 }, 1000 * expireWarningSec);
 
 // TILE_SIZE is a square so width / height is the
@@ -131,6 +129,8 @@ function animate() {
   // Lose game scenario (ghost & player collision)
   for (let ghostIndex = ghosts.length - 1; 0 <= ghostIndex; ghostIndex--) {
     const ghost = ghosts[ghostIndex];
+
+    // Ghost / Pacman collision
     if (
       Math.hypot(
         ghost.position.x - player.position.x,

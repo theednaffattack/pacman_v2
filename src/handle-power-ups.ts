@@ -1,13 +1,14 @@
 import { Ghost } from "./ghost-class";
 import { Player } from "./player-class";
 import { Sound } from "./sound-class";
+import { PowerDotTimerArgs } from "./power-dot-timer";
 
 type HandlePowerUpsArgsType = {
   eatPowerUpSound: Sound;
   ghosts: Ghost[];
   powerUps: any[];
   player: Player;
-  powerDotTimer: any;
+  powerDotTimer: (arg0: PowerDotTimerArgs) => void;
   powerDotAboutToExpireTimer: any;
   config: { score: number };
   scoreElement: HTMLElement | null;
@@ -43,6 +44,7 @@ export function handlePowerUps({
       player.powerUpActive = true;
       player.powerUpAboutToExpire = false;
       eatPowerUpSound.play();
+      showPowerUpState(player);
 
       // If we already have active timers we
       // need to clear them before setting new ones.
@@ -52,11 +54,17 @@ export function handlePowerUps({
 
       // Now clear out the timers array
       player.timers = [];
+      let newTimer = powerDotTimer({
+        ghosts,
+        player,
+        activeSec: 10,
+      });
 
-      player.timers.push(powerDotTimer);
+      player.timers.push(newTimer);
 
       player.timers.push(powerDotAboutToExpireTimer);
 
+      // Make the ghosts scared
       ghosts.forEach((ghost) => {
         if (player.powerUpActive) {
           ghost.scared = true;
@@ -72,5 +80,21 @@ export function handlePowerUps({
         scoreElement.innerHTML = config.score.toString();
       }
     }
+  }
+}
+
+export function showPowerUpState(player: Player) {
+  const displayElement = document.getElementById("displayArea");
+  let myVar: "active" | "inactive";
+  if (displayElement) {
+    switch (player.powerUpActive) {
+      case true:
+        myVar = "active";
+        break;
+      case false:
+        myVar = "inactive";
+        break;
+    }
+    displayElement.textContent = myVar;
   }
 }

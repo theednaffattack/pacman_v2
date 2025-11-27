@@ -51,7 +51,7 @@ export function handleGhosts({
     ghost.draw(context, player);
     if (!paused) {
       ghost.update(context, player, mapHeight, mapWidth);
-    }
+    } // if
 
     const collisions: CollisionType[] = [];
 
@@ -167,11 +167,11 @@ export function handleGhosts({
             ghost.velocity.y = 0;
             ghost.velocity.x = -ghost.speed;
             break;
-        }
+        } // switch
 
         ghost.prevCollisions = [];
-      }
-    }
+      } // if
+    } // if
 
     // Draw ghost path for new ghosts
     if (ghost.eaten && ghost.ghostPenPath.length === 0) {
@@ -200,7 +200,8 @@ export function handleGhosts({
       ghost.ghostPenPath = path;
 
       // END A STAR
-    }
+    } // if
+
     // Make eaten ghosts move to the pen
     if (ghost.eaten && ghost.ghostPenPath.length > 0) {
       // cancelAnimationFrame(animationId);
@@ -271,7 +272,7 @@ export function handleGhosts({
         ghost.blinking = false;
         console.log("GOOOOOAAAAAAAL");
       }
-    }
-  });
+    } // if
+  }); // ghosts.forEach
   // END Ghost movement
 }
