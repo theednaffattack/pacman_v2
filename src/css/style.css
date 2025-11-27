@@ -61,3 +61,15 @@ canvas {
   height: 44px;
   background: url(pacman_life.png) 0 0;
 }
+
+#lives-and-fruit-container {
+  display: flex;
+}
+
+#displayArea {
+  padding-left: 8px;
+  color: white;
+  display: flex;
+  font-family: sans-serif;
+  font-size: 18px;
+}
